@@ -1,0 +1,1 @@
+export const ENDPOINT = 'http://172.20.20.20:8080/ufind/api/v1'

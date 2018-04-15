@@ -2,16 +2,18 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, AsyncStorage, Animated } from 'react-native'
 import axios from 'axios'
 
+import { ENDPOINT } from '../constants/api'
+
 import { Actions } from 'react-native-router-flux'
+import { PRIMARY_BLUE } from '../constants/colors';
 // { firstName, lastName, email, username, password }
 export default class Signup extends Component {
   state = { 
-    firstName: '',
-    lastName: '',
-    email: '', 
-    username: '', 
-    password: '',
-    confirmPassword: '',
+    firstName: 'serey',
+    lastName: 'morm',
+    email: 'serey@morm.com', 
+    password: 'password',
+    confirmPassword: 'password',
     errors: {},
     fadeAnim: new Animated.Value(0)
   }
@@ -25,20 +27,18 @@ export default class Signup extends Component {
       }
     ).start()
   }
+  
   validateInputs = () => {
     const { 
       firstName, 
       lastName, 
       email, 
-      username, 
       password, 
       confirmPassword 
     } = this.state
     let errors = {}
     let isValid = true
 
-    if(username === '')
-      errors.username = 'A username is required'
     if(firstName === '')
       errors.firstName = 'Field required'
     if(lastName === '')
@@ -61,19 +61,24 @@ export default class Signup extends Component {
     return { errors, isValid }
   }
 
+  // first_name = request.json["first_name"]
+  // last_name = request.json["last_name"]
+  // email = request.json["email"]
+  // password = request.json["password"]
   onSubmit = () => {
     const form = this.validateInputs()
-    console.log(form.isValid)
+    console.log(form)
     if(form.isValid) {
       const formData = { 
         firstName: this.state.firstName, 
         lastName: this.state.lastName,
         email: this.state.email,
-        username: this.state.username,
         password: this.state.password
       }
-      axios.post('http://127.0.0.1:8080/ufind/api/v1/users', formData)
+      console.log(formData)
+      axios.post(`${ENDPOINT}/users`, formData)
       .then(async res => {
+        console.log(res)
         const { token } = res.data
         try {
           await AsyncStorage.setItem('@token', res.data.token)
@@ -143,17 +148,6 @@ export default class Signup extends Component {
               style={styles.textInputWide}
               autoCapitalize='none'/>
           </View>
-          <View style={styles.input}>
-            {this.state.errors.email
-              ? <Text style={styles.labelError}>{this.state.errors.username}</Text>
-              : <Text style={styles.label}>USER</Text>
-            }
-            <TextInput
-              placeholder='Hi Daniel'
-              onChangeText={(username) => this.setState({username})}
-              style={styles.textInputWide}
-              autoCapitalize='none'/>
-          </View>
           <View style={styles.smallInputContainer}>
             <View style={styles.smallInputLeft}>
               {this.state.errors.email
@@ -201,12 +195,13 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({ 
   container: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: PRIMARY_BLUE,
     justifyContent: 'center',
-    backgroundColor: '#5BCEC1',
+    alignItems: 'center',
+    paddingBottom: '10%'
   },
   formContainer: {
-    marginTop: -200,
+    marginTop: 0,
     width: '93%',
     alignItems: 'center',
     backgroundColor: 'white',

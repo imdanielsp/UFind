@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity, AsyncStorage, Animated, ActivityIndicator } from 'react-native'
-// import axios from 'axios'
+import axios from 'axios'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
 // import { FontAwesome } from '@expo/vector-icons'
@@ -8,6 +8,8 @@ import { Actions } from 'react-native-router-flux'
 // import Home from './Home'
 import Spinner from 'react-native-spinkit'
 
+import { PRIMARY_BLUE } from '../constants/colors'
+import { HEADER_TITLE as titleStyle } from '../constants/styles'
 type Props = {}
 export default class Login extends Component<Props> {
   state = { 
@@ -32,6 +34,8 @@ export default class Login extends Component<Props> {
   }
 
   onSubmit = () => {
+    const { username, password } = this.state
+    console.log(username, password)
     // this.setState({ isLoading: true })
     // const { username, password } = this.state
     // const data = { username, password }
@@ -63,38 +67,40 @@ export default class Login extends Component<Props> {
     return (
       <View style={styles.container}>
           <Animated.View style={[styles.content, containerAnimation]}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>USER</Text>
-              <TextInput
-                placeholder='Username or E-Mail'
-                onChangeText={(username) => this.setState({username})}
-                autoCapitalize='none'
-                style={styles.textInput}/>
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>PASS</Text>
-              <TextInput
-                placeholder='Your Password'
-                onChangeText={(password) => this.setState({password})}
-                style={styles.textInput}
-                autoCapitalize='none'
-                secureTextEntry/>
+            <Text style={styles.title}>Login</Text>
+            <View style={styles.allInputContainer}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Your E-mail</Text>
+                <TextInput
+                  placeholder='University E-Mail'
+                  onChangeText={(username) => this.setState({username})}
+                  autoCapitalize='none'
+                  style={styles.textInput}/>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                  placeholder='Your Password'
+                  onChangeText={(password) => this.setState({password})}
+                  style={styles.textInput}
+                  autoCapitalize='none'
+                  secureTextEntry/>
+              </View>
             </View>
             <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={this.onSubmit}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
                 onPress={this._goToSignup}>
-                <Text style={styles.buttonText}>NEW USER</Text>
-              </TouchableOpacity>
-              <View style={styles.splitter}/>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.onSubmit}>
-                <Text style={styles.buttonText}>LOG IN</Text>
+                <Text style={styles.buttonText}>Not a member?</Text>
               </TouchableOpacity>
             </View>
         </Animated.View>
-      </View>      
+      </View>
     )
   }
 }
@@ -102,73 +108,70 @@ export default class Login extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#5BCEC1',
+    justifyContent: 'space-between',
+    backgroundColor: PRIMARY_BLUE,
+    paddingTop: '15%',
+    paddingHorizontal: '3%',
   },
   loadingContainer: {
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '90%',
-    backgroundColor: 'white',
-    paddingHorizontal: '7%',
-    paddingBottom: 1,
-    paddingTop: 20,
-    borderRadius: 10,
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 1,
+  title: {
+    fontSize: 50,
+    textAlign: 'left',
+    color: 'white',
+    fontFamily: 'circular'
   },
-  inputContainer:{
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    alignItems: 'center',
+  content: {
+    justifyContent: 'space-between',
+  },
+  allInputContainer: {
+    marginTop: '8%',
+  },
+  inputContainer: {
+    flexDirection: 'column',
     borderColor: '#eee',
-    marginTop: 2,
-    paddingVertical: 10
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    // flexDirection: 'column',
   },
   textInput: {
     padding: 15,
-    width: '85%',
+    width: '100%',
     color: 'black',
-    fontSize: 18
+    fontSize: 18,
+    backgroundColor: 'rgba(255,255,255, 0.8)',
+    fontFamily: 'circular',
+    borderWidth: 0,
   },
   label: {
-    color: '#555',
-    fontWeight: 'bold',
-    fontSize: 12,
-    letterSpacing: 2
+    color: 'white',
+    fontFamily: 'circular',
+    fontSize: 18,
+    textAlign: 'left',
+    paddingVertical: '5%'
+  },
+  buttonContainer: {
+    marginTop: '25%'
   },
   button: {
-    paddingVertical: 25,
-    width: '49%',
+    paddingVertical: 20,
+    marginBottom: '5%',
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 1,
   },
   buttonText: {
     textAlign: 'center',
-    letterSpacing: 2,
-    fontWeight: '800',
-    fontSize: 14,
-    color: '#5BCEC1',
+    fontSize: 20,
+    fontFamily: 'circular',
+    color: PRIMARY_BLUE,
   },
-  splitter: {
-    borderWidth: 0.5,
-    height: '100%',
-    borderColor: '#eee'
-  }
 })

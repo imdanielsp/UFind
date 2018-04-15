@@ -38,7 +38,7 @@ export default class App extends Component<Props> {
             hideNavBar
             initial/>
             <Scene 
-              title='LOGIN'
+              title=''
               key='login'
               component={Login}
               navBarButtonColor='white'
@@ -50,7 +50,7 @@ export default class App extends Component<Props> {
               navTransparent/>
             <Scene 
               key='signup' 
-              title='SIGNUP'
+              title=''
               component={Signup}
               navBarButtonColor='white'
               backButtonTintColor='white'

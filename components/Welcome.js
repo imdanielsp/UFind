@@ -10,7 +10,9 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
-import lottieFile from '../lottie/gradient.json'
+import lottieFile from '../lottie/map.json'
+
+import { PRIMARY_BLUE, DARKER_ORANGE } from '../constants/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -21,13 +23,29 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = {
+    progress: new Animated.Value(0),
+  }
+
+  componentDidMount() {
+    Animated.timing(this.state.progress, {
+      toValue: 1,
+      duration: 5000,
+      easing: Easing.linear,
+    }).start()
+  }
+
   goToLogin = () => Actions.push('login')
 
   goToSignup = () => Actions.push('signup')
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>UFind</Text>
+        <View>
+          <Text style={styles.title}>Welcome to</Text>
+          <Text style={styles.title}>UFind —</Text>
+          <Text style={styles.titleIntro}>A university community driven application to search for activities or friends.</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={this.goToLogin} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
@@ -43,37 +61,48 @@ export default class App extends Component<Props> {
 
 const styles = StyleSheet.create({
   container: {
+    zIndex: 0,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#5BCEC1'
+    justifyContent: 'space-between',
+    paddingTop: '8%',
+    paddingHorizontal: '3%',
+    backgroundColor: PRIMARY_BLUE,
+  },
+  title: {
+    fontSize: 50,
+    textAlign: 'left',
+    color: 'white',
+    fontFamily: 'circular'
+  },
+  titleIntro: {
+    fontSize: 20,
+    fontFamily: 'circular',
+    color: 'white',
+    paddingTop: 5,
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: '5%',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
   },
   button: {
-    width: '80%',
+    width: '100%',
     alignItems: 'center',
-    paddingHorizontal: '8%',
     paddingVertical: '5%',
     marginVertical: '3%',
     borderRadius: 4,
     backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 1,
   },
   buttonText: {
-    color: '#5BCEC1',
+    color: PRIMARY_BLUE,
     fontSize: 20,
-    fontWeight: '600'
-  },
-  title: {
-    fontSize: 50,
-    textAlign: 'center',
-    fontWeight: '800',
-    color: 'white',
+    fontWeight: '600',
+    fontFamily: 'circular'
   },
   instructions: {
     textAlign: 'center',
