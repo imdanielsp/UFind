@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity, AsyncStorage, Animated, 
-        ActivityIndicator, KeyboardAvoidingView } from 'react-native'
+        ActivityIndicator, KeyboardAvoidingView, Easing } from 'react-native'
 import axios from 'axios'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -11,24 +11,20 @@ import Spinner from 'react-native-spinkit'
 
 import { PRIMARY_BLUE } from '../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../constants/styles'
+
+import LottieView from 'lottie-react-native';
 type Props = {}
 export default class Login extends Component<Props> {
   state = { 
-    username: '',
-    password: '',
-    isLoading: false,
-    fadeAnim: new Animated.Value(0),
-    text: ''
+    progress: new Animated.Value(0)
   }
 
   componentDidMount() {
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 500,
-      }
-    ).start()
+    Animated.timing(this.state.progress, {
+      toValue: 1.5,
+      duration: 3000,
+      easing: Easing.linear
+    }).start()
   }
 
   _goToSignup = () => {
@@ -57,29 +53,12 @@ export default class Login extends Component<Props> {
   }
 
   render() {
-    let containerAnimation = {
-      opacity: this.state.fadeAnim,
-      transform: [{
-        translateY: this.state.fadeAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [100, 0]
-        })
-      }]
-    }
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAvoidingView style={styles.fullscreen}>
-            <Text style={styles.text}>First, lets get your name</Text>
-            <TextInput 
-              style={styles.input} 
-              underlineColorAndroid='white'
-              onSubmitEditing={() => Actions.push('lastname', { first: this.state.text })}
-              onChangeText={(text) => this.setState({ text })}
-              value={this.state.text}
-            />
-          </KeyboardAvoidingView>
-        </Animated.View>
+          <LottieView
+            source={require('../lottie/check.json')}
+            progress={this.state.progress}
+          />
       </View>
     )
   }

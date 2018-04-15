@@ -11,6 +11,8 @@ import Icons from 'react-native-vector-icons/Ionicons'
 import Welcome from './components/Welcome'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import Lastname from './components/Lastname'
+import Success from './components/Success'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -48,6 +50,22 @@ export default class App extends Component<Props> {
               renderBackButton={this.loginBackButton}
               backTitle='CANCEL'
               navTransparent/>
+              <Scene 
+              title=''
+              key='lastname'
+              component={Lastname}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              backTitle='CANCEL'
+              navTransparent/>
+              <Scene 
+              title=''
+              key='success'
+              component={Success}
+              hideNavBar/>
             <Scene 
               key='signup' 
               title=''
@@ -76,7 +94,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
     fontWeight: '800',
-    color: 'white'
+    color: 'black'
   },
   instructions: {
     textAlign: 'center',
@@ -84,7 +102,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   backIcon: {
-    fontSize: 40,
+    fontSize: 30,
     color: 'white',
     paddingLeft: 15,
     marginBottom: 0

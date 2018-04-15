@@ -12,7 +12,7 @@ import Spinner from 'react-native-spinkit'
 import { PRIMARY_BLUE } from '../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../constants/styles'
 type Props = {}
-export default class Login extends Component<Props> {
+export default class Lastname extends Component<Props> {
   state = { 
     username: '',
     password: '',
@@ -70,11 +70,13 @@ export default class Login extends Component<Props> {
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView style={styles.fullscreen}>
-            <Text style={styles.text}>First, lets get your name</Text>
+            <Text style={styles.text}>Hi {this.props.first}, lets make a username</Text>
             <TextInput 
               style={styles.input} 
               underlineColorAndroid='white'
-              onSubmitEditing={() => Actions.push('lastname', { first: this.state.text })}
+              onSubmitEditing={() => {
+                Actions.replace('success')
+              }}
               onChangeText={(text) => this.setState({ text })}
               value={this.state.text}
             />
@@ -102,11 +104,13 @@ const styles = StyleSheet.create({
     width: '80%',
     color: 'white',
     textAlign: 'center',
-    fontSize: 30
+    fontSize: 30,
   },
   text: {
     fontSize: 30,
     color: 'white',
-    marginBottom: 10
+    marginBottom: 10,
+    textAlign: 'center',
+    margin: 'auto'
   }
 })
