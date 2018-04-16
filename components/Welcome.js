@@ -37,7 +37,7 @@ export default class App extends Component<Props> {
 
   goToLogin = () => Actions.push('login')
 
-  goToSignup = () => Actions.push('signup')
+  goToSignup = () => Actions.push('signupFirstname')
   render() {
     return (
       <View style={styles.container}>

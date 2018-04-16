@@ -10,7 +10,12 @@ import Icons from 'react-native-vector-icons/Ionicons'
 
 import Welcome from './components/Welcome'
 import Login from './components/Login'
-import Signup from './components/Signup'
+
+import Name from './components/Signup/Name'
+import Email from './components/Signup/Email'
+import Password from './components/Signup/Password'
+import PasswordConfirm from './components/Signup/PasswordConfirm';
+import BioProfilePic from './components/Signup/BioProfilePic';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -34,7 +39,7 @@ export default class App extends Component<Props> {
           <Scene
             key='home'
             title='UFind'
-            component={Welcome}
+            component={BioProfilePic}
             hideNavBar
             initial/>
             <Scene 
@@ -49,9 +54,49 @@ export default class App extends Component<Props> {
               backTitle='CANCEL'
               navTransparent/>
             <Scene 
-              key='signup' 
+              key='signupFirstname' 
               title=''
-              component={Signup}
+              component={Name}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              navTransparent/>
+            <Scene 
+              key='signupEmail' 
+              title=''
+              component={Email}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              navTransparent/>
+            <Scene 
+              key='signupPassword' 
+              title=''
+              component={Password}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              navTransparent/>
+            <Scene 
+              key='signupPasswordConfirm' 
+              title=''
+              component={PasswordConfirm}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              navTransparent/>
+            <Scene 
+              key='signupBioProfilePic' 
+              title=''
+              component={BioProfilePic}
               navBarButtonColor='white'
               backButtonTintColor='white'
               backButtonTextStyle={styles.backButtonTextStyle}
