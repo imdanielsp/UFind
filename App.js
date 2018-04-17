@@ -5,6 +5,7 @@ import {
   Text,
   View
 } from 'react-native';
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
 import Icons from 'react-native-vector-icons/Ionicons'
 
@@ -16,6 +17,7 @@ import Email from './components/Signup/Email'
 import Password from './components/Signup/Password'
 import PasswordConfirm from './components/Signup/PasswordConfirm';
 import BioProfilePic from './components/Signup/BioProfilePic';
+import { PRIMARY_BLUE } from './constants/colors';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -26,16 +28,21 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+
   loginBackButton = () => {
     return <Icons 
       name="ios-arrow-round-back" 
       style={styles.backIcon}
-      onPress={() => Actions.pop()}/>
+      onPress={() => {
+        Actions.pop()
+      }}/>
   }
   render() {
     return (
       <Router>
-        <Stack key='root'>
+        <Stack key='root'
+          transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal })}
+        >
           <Scene
             key='home'
             title='UFind'
@@ -53,7 +60,8 @@ export default class App extends Component<Props> {
               renderBackButton={this.loginBackButton}
               backTitle='CANCEL'
               navTransparent/>
-            <Scene 
+            <Scene
+              navigationBarStyle={styles.nav}
               key='signupFirstname' 
               title=''
               component={Name}
@@ -62,8 +70,9 @@ export default class App extends Component<Props> {
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
+              />
             <Scene 
+              navigationBarStyle={styles.nav}
               key='signupEmail' 
               title=''
               component={Email}
@@ -72,8 +81,9 @@ export default class App extends Component<Props> {
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
+              />
             <Scene 
+              navigationBarStyle={styles.nav}
               key='signupPassword' 
               title=''
               component={Password}
@@ -82,8 +92,9 @@ export default class App extends Component<Props> {
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
+              />
             <Scene 
+              navigationBarStyle={styles.nav}
               key='signupPasswordConfirm' 
               title=''
               component={PasswordConfirm}
@@ -92,8 +103,9 @@ export default class App extends Component<Props> {
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
-            <Scene 
+              />
+            <Scene
+              navigationBarStyle={styles.nav}
               key='signupBioProfilePic' 
               title=''
               component={BioProfilePic}
@@ -102,7 +114,7 @@ export default class App extends Component<Props> {
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
+              />
         </Stack>
       </Router>
     );
@@ -134,4 +146,11 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginBottom: 0
   },
+  nav: {
+    backgroundColor: PRIMARY_BLUE,
+    shadowColor: 'transparent',
+    shadowRadius: 0,
+    elevation: 0,
+    height: 50
+  }
 });

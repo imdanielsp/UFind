@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, 
-          TouchableOpacity, AsyncStorage, Animated, 
-          ActivityIndicator, KeyboardAvoidingView } from 'react-native'
+import { Text, View, TextInput, StyleSheet, Button,
+          TouchableOpacity, AsyncStorage, Animated, ActivityIndicator, KeyboardAvoidingView, ScrollView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
 
@@ -13,7 +12,9 @@ export default class Name extends Component<Props> {
   state = { 
     fullname: '',
     errors: '',
-    fadeAnim: new Animated.Value(0)
+    fadeAnim: new Animated.Value(0),
+    slideOut: new Animated.Value(0),
+    slideIn: new Animated.Value(1000),
   }
 
   componentDidMount() {
@@ -21,9 +22,11 @@ export default class Name extends Component<Props> {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 500,
+        duration: 1000,
       }
-    ).start()
+    ).start(done => {
+      this.input.focus()
+    })
   }
 
   _onSubmit = () => {
@@ -31,6 +34,7 @@ export default class Name extends Component<Props> {
       this.setState({ errors: 'Invalid Name'})
     }
     else {
+      Keyboard.dismiss()
       Actions.push('signupEmail', { fullname: this.state.fullname })
     }
   }
@@ -41,26 +45,35 @@ export default class Name extends Component<Props> {
       transform: [{
         translateY: this.state.fadeAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [100, 0]
+          outputRange: [1000, 0]
         })
-      }]
+      }, { translateY: this.state.slideOut}]
     }
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView style={styles.keyboardAvoid}>
-            <Text style={styles.text}>Hi, lets start with your name.</Text>
-            <TextInput 
-              style={styles.input}
-              underlineColorAndroid='white'
-              value={this.state.fullame}
-              onChangeText={fullname => this.setState({ fullname })}
-              onSubmitEditing={this._onSubmit}
-              placeholder='First Last'
-              onFocus={() => this.setState({ errors: '' })}
-              autoFocus
-            />
-            {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
+            <View>
+              <Text style={styles.text}>Hi There</Text>
+              <Text style={styles.text_small}>First, lets get your name</Text>
+              <TextInput 
+                style={styles.input}
+                underlineColorAndroid='rgba(0,0,0,0)'
+                value={this.state.fullame}
+                onChangeText={fullname => this.setState({ fullname })}
+                onSubmitEditing={this._onSubmit}
+                placeholder='First Last'
+                onFocus={() => this.setState({ errors: '' })}
+                blurOnSubmit={false}
+                ref={input => this.input = input}              
+              />
+              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </KeyboardAvoidingView>
         </Animated.View>
       </View>
@@ -71,29 +84,54 @@ export default class Name extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     backgroundColor: PRIMARY_BLUE,
-    paddingTop: '15%',
-    paddingHorizontal: '3%',
+    paddingHorizontal: '3%'
   },
   keyboardAvoid: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
+    height: '98%',
+    justifyContent: 'space-between'
   },
   text: {
     color: 'white',
-    fontSize: 30,
-    textAlign: 'center'
+    fontSize: 40,
+    textAlign: 'center',
+    fontWeight: "200",
+    marginBottom: 20
+  },
+  text_small: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: "200",
+    marginBottom: 40
   },
   input: {
-    width: '80%',
+    width: '100%',
     fontSize: 30,
     textAlign: 'center',
-    color: 'white'
+    color: 'white',
+    margin: 'auto'
   },
   invalid: {
     color: 'red',
-    fontSize: 15
+    fontSize: 15,
+    textAlign: 'center'
+  },
+  button: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: '3%',
+    marginVertical: '3%',
+    borderRadius: 4,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 1,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: 'black'
   }
 })
