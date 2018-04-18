@@ -3,7 +3,9 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
@@ -13,7 +15,6 @@ import Welcome from './components/Welcome'
 import Login from './components/Login'
 import Home from './components/Home'
 
-import Name from './components/Signup/Name'
 import Email from './components/Signup/Email'
 import Password from './components/Signup/Password'
 import PasswordConfirm from './components/Signup/PasswordConfirm'
@@ -31,9 +32,22 @@ const instructions = Platform.select({
 type Props = {};
 export default class App extends Component<Props> {
   state = {
-    authenticated: false
+    authenticated: false,
+    isLoading: false,
   }
 
+  async componentDidMount() {
+    try {
+      const token = await AsyncStorage.getItem('@token')
+      if(token) { 
+        this.setState({ authenticated: true, isLoading: false })
+      }
+    } catch (e) {
+      console.log(e)
+      this.setState({ isLoading: false })
+    }
+  }
+  
 
   loginBackButton = () => {
     return <Icons 
@@ -44,34 +58,44 @@ export default class App extends Component<Props> {
       }}
       />
   }
+
   render() {
+    if(this.state.isLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color='white' size='large' />
+        </View>
+      )
+    }
     return (
       <Router>
         <Stack key='root'
-          transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal })}
-        >
-          <Scene
-            key='home'
-            title=''
-            component={Home}
-            hideNavBar
-            initial/>
+          transitionConfig={
+            () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
+            <Scene
+              key='home'
+              title=''
+              component={Home}
+              hideNavBar
+              initial={this.state.authenticated}/>
             <Scene
               key='welcome'
               title=''
               component={Welcome}
-              hideNavBar/>
+              hideNavBar
+              initial={!this.state.authenticated}/>
             <Scene 
               title=''
               key='login'
               component={Login}
+              navigationBarStyle={styles.nav}
               navBarButtonColor='white'
               backButtonTintColor='white'
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
               backTitle='CANCEL'
-              navTransparent/>
+              />
             <Scene 
               navigationBarStyle={styles.nav}
               key='signupEmail' 
@@ -83,7 +107,7 @@ export default class App extends Component<Props> {
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
               />
-            <Scene 
+            <Scene
               navigationBarStyle={styles.nav}
               key='signupPassword' 
               title=''
@@ -140,6 +164,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#5185EC',
   },
+  loadingContainer:{
+    height: '100%',
+    justifyContent: 'center',
+    backgroundColor: PRIMARY_COLOR
+  },
   title: {
     fontSize: 40,
     textAlign: 'center',
@@ -163,6 +192,6 @@ const styles = StyleSheet.create({
     shadowColor: 'transparent',
     shadowRadius: 0,
     elevation: 0,
-    height: 50
-  }
+    height: 50,
+  },
 });

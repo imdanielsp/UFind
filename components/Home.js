@@ -14,7 +14,8 @@ import {
   NavigatorIOS,
   TouchableOpacity,
   AppState,
-  AsyncStorage
+  AsyncStorage,
+  StatusBar
 } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
@@ -96,6 +97,7 @@ class Home extends Component {
     render() {
       return (
         <View style={styles.homeContainer}>
+        <StatusBar backgroundColor='white' barStyle="dark-content" />
           {this._getRoute()}
           <BottomNavigation
             labelColor={PRIMARY_COLOR}

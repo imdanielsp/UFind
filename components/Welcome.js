@@ -6,13 +6,14 @@ import {
   View,
   TouchableOpacity,
   Animated, 
-  Easing
+  Easing,
+  StatusBar
 } from 'react-native';
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
 import lottieFile from '../lottie/map.json'
 
-import { PRIMARY_COLOR, DARKER_ORANGE } from '../constants/colors'
+import { PRIMARY_COLOR } from '../constants/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -41,6 +42,7 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+      <StatusBar backgroundColor={PRIMARY_COLOR} barStyle="light-content" />
         <View>
           <Text style={styles.title}>Welcome to</Text>
           <Text style={styles.title}>UFind —</Text>

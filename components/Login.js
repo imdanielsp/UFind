@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity, AsyncStorage, Animated, ActivityIndicator } from 'react-native'
+import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity,
+  AsyncStorage, Animated, ActivityIndicator, Alert, StatusBar } from 'react-native'
 import axios from 'axios'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -32,27 +33,52 @@ export default class Login extends Component<Props> {
   }
 
   _goToSignup = () => {
-    Actions.replace('signup')
+    Actions.replace('signupEmail')
   }
 
   onSubmit = () => {
     const { email, password } = this.state
-    this.setState({ isLoading: true })
-    const payload = { email, password }
-    axios.post(`${ENDPOINT}/login`, payload)
-    .then(async res => {
-      console.log(res)
-      this.setState({ isLoading: false })
-      try {
-        await AsyncStorage.setItem('@token', res.data.access_token)
-        Actions.home()
-      } catch (e) {
-        console.log(e)
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
+    if(email === '' || password === '') {
+      Alert.alert(
+        'Empty Fields', 
+        `Please enter both your university email and password for your account.`
+      )
+      return
+    }
+    const match = /^([a-zA-Z]+)_([a-zA-Z]+)[0-9]*@student.uml.edu/.exec(email)
+    if(!match) {
+      Alert.alert(
+        'Invalid Email', 
+        `Make sure you've entered your university email correctly.`
+      )
+    } else {
+      this.setState({ isLoading: true })
+      const payload = { email, password }
+      axios.post(`${ENDPOINT}/login`, payload)
+      .then(async res => {
+        this.setState({ isLoading: false })
+        try {
+          await AsyncStorage.setItem('@token', res.data.access_token)
+          Actions.home()
+        } catch (e) {
+          console.log(e)
+        }
+      })
+      .catch((err) => {
+        if(err.request.status === 403) {
+          Alert.alert(
+            'Invalid Password', 
+            `Make sure you've entered your password correctly.`
+          )
+        } else if(err.request.status === 404) {
+          Alert.alert(
+            'Email not found', 
+            `Make sure you've typed your email correctly — or create an account if you haven't already`
+          )
+        }
+        this.setState({ isLoading: false })
+      })
+    }
   }
 
   render() {
@@ -65,8 +91,10 @@ export default class Login extends Component<Props> {
         })
       }]
     }
+    const { isLoading } = this.state
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor={PRIMARY_COLOR} barStyle="light-content" />
           <Animated.View style={[styles.content, containerAnimation]}>
             <Text style={styles.title}>Login</Text>
             <View style={styles.allInputContainer}>
@@ -77,7 +105,9 @@ export default class Login extends Component<Props> {
                   underlineColorAndroid='rgba(0,0,0,0)'
                   onChangeText={(email) => this.setState({email})}
                   autoCapitalize='none'
-                  style={styles.textInput}/>
+                  style={styles.textInput}
+                  spellCheck={false}
+                  autoCorrect={false}/>
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Password</Text>
@@ -93,8 +123,11 @@ export default class Login extends Component<Props> {
             <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={this.onSubmit}>
-              <Text style={styles.buttonText}>Login</Text>
+              onPress={isLoading ? null : this.onSubmit}>
+              {isLoading 
+                ? <ActivityIndicator size='small' color={PRIMARY_COLOR} /> 
+                : <Text style={styles.buttonText}>Login</Text>
+              }
             </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
@@ -113,7 +146,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: PRIMARY_COLOR,
-    paddingTop: '15%',
     paddingHorizontal: '3%',
   },
   loadingContainer: {
@@ -131,7 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   allInputContainer: {
-    marginTop: '8%',
+    marginTop: '0%',
   },
   inputContainer: {
     flexDirection: 'column',

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, AsyncStorage, Image, FlatList, TouchableOpacity, Animated } from 'react-native'
+import { View, Text, StyleSheet, AsyncStorage, Image, ActivityIndicator,
+  TouchableOpacity, Animated } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
@@ -13,6 +14,7 @@ export default class Profile extends Component {
     user: { // default values — just in case
       first_name: '', 
       last_name: '', 
+      isLoading: true,
       profile_image: 'http://via.placeholder.com/160x160', 
       bio: '' 
     },
@@ -37,8 +39,8 @@ export default class Profile extends Component {
         axios.get(`${ENDPOINT}/user/${id}`)
         .then(res => {
           this.setState({ 
-            isAuthenticated: true,
-            user: res.data
+            isLoading: false,
+            user: res.data,
           })
         })
         
@@ -85,7 +87,13 @@ export default class Profile extends Component {
       }]
     }
     const { first_name, last_name, profile_image, bio } = this.state.user
-    console.log(this.state.user)
+    if(this.state.isLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color={PRIMARY_COLOR} size='large' />
+        </View>
+      )
+    }
     return (
       <Animated.View style={[styles.container, containerAnimation]}>
         <View>
@@ -128,6 +136,10 @@ const styles = StyleSheet.create({
     height: '90%',
     paddingHorizontal: 20,    
   },
+  loadingContainer : {
+    height: '90%',
+    justifyContent: 'center',
+  },
   profileContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -168,7 +180,8 @@ const styles = StyleSheet.create({
     borderRadius: 35
   },
   bioContainer: {
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: '45%',
   },
   bioHeader: {
     fontFamily: 'circular',
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'circular',
     marginTop: 20,
-    borderRadius: 15
+    borderRadius: 5
   },
   profileOptionContainer: {
     borderTopWidth: 1,

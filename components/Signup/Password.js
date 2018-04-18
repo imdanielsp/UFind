@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, 
-          TouchableOpacity, AsyncStorage, Animated, 
+          TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -12,7 +12,6 @@ type Props = {}
 export default class Password extends Component<Props> {
   state = { 
     password: '',
-    errors: '',
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
     slideIn: new Animated.Value(1000),
@@ -31,11 +30,10 @@ export default class Password extends Component<Props> {
   }
 
   _onSubmit = () => {
+    Keyboard.dismiss()
     if(this.state.password.length < 7) {
-      this.setState({ errors: 'Password must be greater than 7 characters'})
-    }
-    else {
-      Keyboard.dismiss()
+      Alert.alert('Invalid Password', 'Passwords length must be greater than 6 characters')
+    } else {
       Actions.push('signupPasswordConfirm', 
       { 
         first_name: this.props.first_name,
@@ -68,15 +66,13 @@ export default class Password extends Component<Props> {
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
                 value={this.state.password}
-                onChangeText={password => this.setState({ password, errors: '' })}
+                onChangeText={password => this.setState({ password })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Password'
-                onFocus={() => this.setState({ errors: '' })}
                 blurOnSubmit={false}
                 ref={input => this.input = input}  
                 secureTextEntry={true}          
               />
-              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
             </View>
             <View>
               <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>

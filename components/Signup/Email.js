@@ -1,20 +1,21 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, 
-          TouchableOpacity, AsyncStorage, Animated, 
+          TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 import axios from 'axios'
 import { Actions } from 'react-native-router-flux'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
+import { ENDPOINT } from '../../constants/api'
 
 import { isEmail } from 'lodash-checkit'
 
 type Props = {}
 export default class Email extends Component<Props> {
   state = { 
-    email: 'serey_morm@student.uml.edu',
-    errors: '',
+    email: '',
+    isLoading: false,
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
     slideIn: new Animated.Value(1000),
@@ -33,13 +34,14 @@ export default class Email extends Component<Props> {
   }
 
   _onSubmit = () => {
+    Keyboard.dismiss()
     const { email } = this.state
-    const match = /^([a-zA-Z]+)_([a-zA-Z]+)[0-9]*@student.uml.edu*/.exec(email)
+    const match = /^([a-zA-Z]+)_([a-zA-Z]+)[0-9]*@student.uml.edu/.exec(email)
     if(match) {
-      axios.post('https://ufind-api.herokuapp.com/ufind/api/v1/user/verify/email', { email })
+      this.setState({ isLoading: true })
+      axios.post(`${ENDPOINT}/user/verify/email`, { email })
       .then(res => {
         if(res.status === 200) {
-          Keyboard.dismiss()
           Actions.push(
             'signupPassword',
             { 
@@ -49,13 +51,16 @@ export default class Email extends Component<Props> {
             }
           )
         }
+        this.setState({ isLoading: false })
       })
       .catch(err => {
         if(err.response.status === 409)
-          this.setState({ errors: 'Email already in use'})
+          Alert.alert('Invalid Email', `Email already in use — already a member? Navigate to the login page`)
+        this.setState({ isLoading: false })
       })
     } else {
-      this.setState({ errors: 'Not a valid email'})
+      Alert.alert('Invalid Email', `UFind requires all members to use their UMass Lowell emails.`)
+      this.setState({ isLoading: false })
     }
   }
 
@@ -69,6 +74,7 @@ export default class Email extends Component<Props> {
         })
       }, { translateY: this.state.slideOut}]
     }
+    const { isLoading } = this.state
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
@@ -80,18 +86,19 @@ export default class Email extends Component<Props> {
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
                 value={this.state.email}
-                onChangeText={email => this.setState({ email, errors: '' })}
+                onChangeText={email => this.setState({ email })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Email'
-                onFocus={() => this.setState({ errors: '' })}
                 blurOnSubmit={false}
                 ref={input => this.input = input}            
               />
-              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
             </View>
             <View>
-              <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>
-                <Text style={styles.buttonText}>Next</Text>
+              <TouchableOpacity onPress={isLoading ? null : this._onSubmit} style={styles.button}>
+                {isLoading
+                  ? <ActivityIndicator color={PRIMARY_COLOR} size='small' />
+                  : <Text style={styles.buttonText}>Next</Text> 
+                }
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>

@@ -16,7 +16,7 @@ type Props = {}
 export default class Bio extends Component<Props> {
   state = { 
     profile_image: null,
-    errors: '',
+    isLoading: false,
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
     slideIn: new Animated.Value(1000),
@@ -38,6 +38,7 @@ export default class Bio extends Component<Props> {
     const { profile_image } = this.state
     const { first_name, last_name, email, password, bio } = this.props
     const payload = { first_name, last_name, email, password, bio, profile_image }
+    this.setState({ isLoading: true })
     axios.post(`${ENDPOINT}/user`, payload)
     .then(async res => {
       const { access_token } = res.data
@@ -45,10 +46,14 @@ export default class Bio extends Component<Props> {
         await AsyncStorage.setItem('@token', JSON.stringify(res.data.access_token))
         Actions.push('home')
       } catch (e) {
-        console.log(e)
+        Alert.alert('Token Error', 'Somethig went wrong while setting up your account..')
+        this.setState({ isLoading: false })
       }
     })
-    .catch(err => console.log(err))
+    .catch(err => { 
+      Alert.alert('Server Error', 'Somethig went wrong while signing up..')
+      this.setState({ isLoading: false })
+    })
   }
 
   _pickImage = () => {
@@ -71,7 +76,7 @@ export default class Bio extends Component<Props> {
         })
       }, { translateY: this.state.slideOut}]
     }
-    const { profile_image } = this.state
+    const { profile_image, isLoading } = this.state
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
@@ -81,17 +86,16 @@ export default class Bio extends Component<Props> {
               <Text style={styles.text_small}>
                 {profile_image === null
                  ? 'Add a picture of yourself so others can see what you look like'
-                 : 'Looking good! Choose a different photo or complete the signup process'
+                 : 'Looking good! Complete the signup process or choose a different photo '
                 }
               </Text>
-              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
             </View>
             <View style={{alignItems: 'center'}}>
               {profile_image === null
                 ? (
                   <Image 
                     style={styles.imagePreview}
-                    onPress={() => this._pickImage()}
+                    onPress={this._pickImage}
                     source={{ uri: 'https://s3.amazonaws.com/ufind-statics/profile_image.png'}} 
                   />
                 )
@@ -101,17 +105,20 @@ export default class Bio extends Component<Props> {
             <View>
               {profile_image === null 
                 ? (
-                  <TouchableOpacity onPress={() => this._pickImage()} style={styles.button}>
+                  <TouchableOpacity onPress={this._pickImage} style={styles.button}>
                     <Text style={styles.buttonText}>Choose Image</Text>
                   </TouchableOpacity>
                 )
                 : (
                 <View style={styles.twoButtonContainer}>
-                  <TouchableOpacity onPress={() => this._pickImage()} style={styles.shortButton}>
+                  <TouchableOpacity onPress={this._pickImage} style={styles.shortButton}>
                     <Text style={styles.buttonText}>Rechoose Photo</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this._onSubmit()} style={styles.shortButton}>
-                    <Text style={styles.buttonText}>Complete Signup</Text>
+                  <TouchableOpacity onPress={this._onSubmit} style={styles.shortButton}>
+                    {isLoading
+                      ? <ActivityIndicator color={PRIMARY_COLOR} size='small' />
+                      : <Text style={styles.buttonText}>Complete Signup</Text>
+                    }
                   </TouchableOpacity>
                 </View>
                 )

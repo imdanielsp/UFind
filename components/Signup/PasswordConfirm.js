@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, 
+import { Text, View, TextInput, StyleSheet, Button, Alert,
           TouchableOpacity, AsyncStorage, Animated, 
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
@@ -12,7 +12,6 @@ type Props = {}
 export default class PasswordConfirm extends Component<Props> {
   state = { 
     password: '',
-    errors: '',
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
     slideIn: new Animated.Value(1000),
@@ -31,11 +30,11 @@ export default class PasswordConfirm extends Component<Props> {
   }
 
   _onSubmit = () => {
+    Keyboard.dismiss()
     if(this.state.password !== this.props.password) {
-      this.setState({ errors: 'Passwords do not match'})
+      Alert.alert('Invalid Password', `Your password must match the one you've entered on the previous screen.`)
     }
     else {
-      Keyboard.dismiss()
       Actions.push('signupBio', 
       { 
         first_name: this.props.first_name,
@@ -67,15 +66,13 @@ export default class PasswordConfirm extends Component<Props> {
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
                 value={this.state.password}
-                onChangeText={password => this.setState({ password, errors: '' })}
+                onChangeText={password => this.setState({ password })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Password'
-                onFocus={() => this.setState({ errors: '' })}
                 blurOnSubmit={false}
                 ref={input => this.input = input}  
                 secureTextEntry={true}          
               />
-              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
             </View>
             <View>
               <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>

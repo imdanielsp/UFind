@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, 
-          TouchableOpacity, AsyncStorage, Animated, 
+          TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,7 +12,6 @@ type Props = {}
 export default class Bio extends Component<Props> {
   state = { 
     bio: '',
-    errors: '',
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
     slideIn: new Animated.Value(1000),
@@ -31,11 +30,11 @@ export default class Bio extends Component<Props> {
   }
 
   _onSubmit = () => {
+    Keyboard.dismiss()
     const { bio } = this.state
     if(bio === ''){
-      this.setState({ errors: 'Please type something.'})
+      Alert.alert('Empty Fields', `Please write something in your bio in order to continue.`)
     } else {
-      Keyboard.dismiss()
       Actions.push('signupProfilePicture', 
       { 
         first_name: this.props.first_name,
@@ -58,6 +57,7 @@ export default class Bio extends Component<Props> {
         })
       }, { translateY: this.state.slideOut}]
     }
+
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
@@ -72,14 +72,12 @@ export default class Bio extends Component<Props> {
                 onChangeText={bio => this.setState({ bio })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Bio'
-                onFocus={() => this.setState({ errors: '' })}
                 blurOnSubmit={false}
                 ref={input => this.input = input}   
                 multiline
               />
-              {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
               <View>
-                <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>
+                <TouchableOpacity onPress={this._onSubmit} style={styles.button}>
                   <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
               </View>
