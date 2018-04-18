@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, 
           TouchableOpacity, AsyncStorage, Animated, 
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
-// import jwt_decode from 'jwt-decode'
+import axios from 'axios'
 import { Actions } from 'react-native-router-flux'
 
-import { PRIMARY_BLUE } from '../../constants/colors'
+import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 
 import { isEmail } from 'lodash-checkit'
@@ -13,7 +13,7 @@ import { isEmail } from 'lodash-checkit'
 type Props = {}
 export default class Email extends Component<Props> {
   state = { 
-    email: '',
+    email: 'serey_morm@student.uml.edu',
     errors: '',
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
@@ -25,7 +25,7 @@ export default class Email extends Component<Props> {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 250,
       }
     ).start(done => {
       this.input.focus()
@@ -33,16 +33,29 @@ export default class Email extends Component<Props> {
   }
 
   _onSubmit = () => {
-    if(!isEmail(this.state.email)) {
-      this.setState({ errors: 'Invalid Email'})
-    }
-    else {
-      Keyboard.dismiss()
-      Actions.push('signupPassword', 
-      { 
-        fullname: this.props.fullname,
-        email: this.state.email
+    const { email } = this.state
+    const match = /^([a-zA-Z]+)_([a-zA-Z]+)[0-9]*@student.uml.edu*/.exec(email)
+    if(match) {
+      axios.post('https://ufind-api.herokuapp.com/ufind/api/v1/user/verify/email', { email })
+      .then(res => {
+        if(res.status === 200) {
+          Keyboard.dismiss()
+          Actions.push(
+            'signupPassword',
+            { 
+              first_name: match[1].toLowerCase().charAt(0).toUpperCase() + match[1].slice(1),
+              last_name: match[2].toLowerCase().charAt(0).toUpperCase() + match[2].slice(1),
+              email: email.toLowerCase() 
+            }
+          )
+        }
       })
+      .catch(err => {
+        if(err.response.status === 409)
+          this.setState({ errors: 'Email already in use'})
+      })
+    } else {
+      this.setState({ errors: 'Not a valid email'})
     }
   }
 
@@ -52,7 +65,7 @@ export default class Email extends Component<Props> {
       transform: [{
         translateY: this.state.fadeAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [1000, 0]
+          outputRange: [20, 0]
         })
       }, { translateY: this.state.slideOut}]
     }
@@ -61,13 +74,13 @@ export default class Email extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView style={styles.keyboardAvoid}>
             <View>
-              <Text style={styles.text}>Nice to meet you, {this.props.fullname.split(' ')[0]}</Text>
-              <Text style={styles.text_small}>Now we need your email</Text>
+              <Text style={styles.text}>Hello —</Text>
+              <Text style={styles.text_small}>UFind requires you to have a UMass Lowell student email.</Text>
               <TextInput 
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
                 value={this.state.email}
-                onChangeText={email => this.setState({ email })}
+                onChangeText={email => this.setState({ email, errors: '' })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Email'
                 onFocus={() => this.setState({ errors: '' })}
@@ -91,38 +104,45 @@ export default class Email extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: '3%'
   },
   keyboardAvoid: {
     height: '98%',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   text: {
     color: 'white',
     fontSize: 40,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: "200",
-    marginBottom: 20
+    marginBottom: 20,
+    fontFamily: 'circular'
   },
   text_small: {
     color: 'white',
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: "200",
-    marginBottom: 20
+    marginBottom: 20,
+    fontFamily: 'circular'
   },
   input: {
     width: '100%',
-    fontSize: 30,
-    textAlign: 'center',
+    fontSize: 24,
+    textAlign: 'left',
     color: 'white',
-    margin: 'auto'
+    margin: 'auto',
+    backgroundColor: 'rgba(255,255,255,0.25)'
   },
   invalid: {
     color: 'red',
     fontSize: 15,
-    textAlign: 'center'
+    textAlign: 'center',
+    borderRadius: 5,
+    backgroundColor: 'white',
+    marginTop: '2%',
+    paddingVertical: '3%'
   },
   button: {
     width: '100%',
@@ -131,14 +151,16 @@ const styles = StyleSheet.create({
     marginVertical: '3%',
     borderRadius: 4,
     backgroundColor: 'white',
-    shadowColor: '#000',
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
     elevation: 1,
   },
   buttonText: {
     fontSize: 20,
-    color: 'black'
+    color: 'black',
+    fontFamily: 'circular',
+    color: PRIMARY_COLOR
   }
 })

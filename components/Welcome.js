@@ -12,7 +12,7 @@ import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
 import lottieFile from '../lottie/map.json'
 
-import { PRIMARY_BLUE, DARKER_ORANGE } from '../constants/colors'
+import { PRIMARY_COLOR, DARKER_ORANGE } from '../constants/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -37,7 +37,7 @@ export default class App extends Component<Props> {
 
   goToLogin = () => Actions.push('login')
 
-  goToSignup = () => Actions.push('signupFirstname')
+  goToSignup = () => Actions.push('signupEmail')
   render() {
     return (
       <View style={styles.container}>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: '8%',
     paddingHorizontal: '3%',
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
   },
   title: {
     fontSize: 50,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: '2%',
+    paddingVertical: '5%',
     marginVertical: '3%',
     borderRadius: 4,
     backgroundColor: 'white',
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   buttonText: {
-    color: PRIMARY_BLUE,
-    fontSize: 20,
+    color: PRIMARY_COLOR,
+    fontSize: 24,
     fontWeight: '600',
     fontFamily: 'circular'
   },

@@ -5,7 +5,7 @@ import axios from 'axios'
 import { ENDPOINT } from '../constants/api'
 
 import { Actions } from 'react-native-router-flux'
-import { PRIMARY_BLUE } from '../constants/colors';
+import { PRIMARY_COLOR } from '../constants/colors';
 // { firstName, lastName, email, username, password }
 export default class Signup extends Component {
   state = { 
@@ -195,7 +195,7 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({ 
   container: {
     flex: 1,
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: '10%'

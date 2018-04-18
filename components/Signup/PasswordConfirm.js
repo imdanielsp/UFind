@@ -5,7 +5,7 @@ import { Text, View, TextInput, StyleSheet, Button,
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
 
-import { PRIMARY_BLUE } from '../../constants/colors'
+import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 
 type Props = {}
@@ -23,7 +23,7 @@ export default class PasswordConfirm extends Component<Props> {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 250,
       }
     ).start(done => {
       this.input.focus()
@@ -36,9 +36,10 @@ export default class PasswordConfirm extends Component<Props> {
     }
     else {
       Keyboard.dismiss()
-      Actions.push('signupBioProfilePic', 
+      Actions.push('signupBio', 
       { 
-        fullname: this.props.fullname,
+        first_name: this.props.first_name,
+        last_name: this.props.last_name,
         email: this.props.email,
         password: this.props.password
       })
@@ -51,7 +52,7 @@ export default class PasswordConfirm extends Component<Props> {
       transform: [{
         translateY: this.state.fadeAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [1000, 0]
+          outputRange: [50, 0]
         })
       }, { translateY: this.state.slideOut}]
     }
@@ -60,13 +61,13 @@ export default class PasswordConfirm extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView style={styles.keyboardAvoid}>
             <View>
-              <Text style={styles.text}>Please Confirm</Text>
-              <Text style={styles.text_small}>Same password as before</Text>
+              <Text style={styles.text}>Confirm —</Text>
+              <Text style={styles.text_small}>Please type your password again to ensure that it's correct</Text>
               <TextInput 
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
                 value={this.state.password}
-                onChangeText={password => this.setState({ password })}
+                onChangeText={password => this.setState({ password, errors: '' })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Password'
                 onFocus={() => this.setState({ errors: '' })}
@@ -91,38 +92,45 @@ export default class PasswordConfirm extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: '3%'
   },
   keyboardAvoid: {
     height: '98%',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   text: {
     color: 'white',
     fontSize: 40,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: "200",
-    marginBottom: 20
+    marginBottom: 20,
+    fontFamily: 'circular'
   },
   text_small: {
     color: 'white',
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: "200",
-    marginBottom: 40
+    marginBottom: 20,
+    fontFamily: 'circular'
   },
   input: {
     width: '100%',
-    fontSize: 30,
-    textAlign: 'center',
+    fontSize: 24,
+    textAlign: 'left',
     color: 'white',
-    margin: 'auto'
+    margin: 'auto',
+    backgroundColor: 'rgba(255,255,255,0.25)'
   },
   invalid: {
     color: 'red',
     fontSize: 15,
-    textAlign: 'center'
+    textAlign: 'center',
+    borderRadius: 5,
+    backgroundColor: 'white',
+    marginTop: '2%',
+    paddingVertical: '3%'
   },
   button: {
     width: '100%',
@@ -131,14 +139,16 @@ const styles = StyleSheet.create({
     marginVertical: '3%',
     borderRadius: 4,
     backgroundColor: 'white',
-    shadowColor: '#000',
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
+    shadowOpacity: 0.5,
+    shadowRadius: 50,
     elevation: 1,
   },
   buttonText: {
     fontSize: 20,
-    color: 'black'
+    color: 'black',
+    fontFamily: 'circular',
+    color: PRIMARY_COLOR
   }
 })

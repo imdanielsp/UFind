@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, 
           TouchableOpacity, AsyncStorage, Animated, 
-          ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
-// import jwt_decode from 'jwt-decode'
+          ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 
 type Props = {}
-export default class Password extends Component<Props> {
+export default class Bio extends Component<Props> {
   state = { 
-    password: '',
+    bio: '',
     errors: '',
     fadeAnim: new Animated.Value(0),
     slideOut: new Animated.Value(0),
@@ -31,19 +31,21 @@ export default class Password extends Component<Props> {
   }
 
   _onSubmit = () => {
-    if(this.state.password.length < 7) {
-      this.setState({ errors: 'Password must be greater than 7 characters'})
-    }
-    else {
+    const { bio } = this.state
+    if(bio === ''){
+      this.setState({ errors: 'Please type something.'})
+    } else {
       Keyboard.dismiss()
-      Actions.push('signupPasswordConfirm', 
+      Actions.push('signupProfilePicture', 
       { 
         first_name: this.props.first_name,
         last_name: this.props.last_name,
         email: this.props.email,
-        password: this.state.password
+        password: this.props.password,
+        bio
       })
     }
+
   }
 
   render() {
@@ -56,34 +58,33 @@ export default class Password extends Component<Props> {
         })
       }, { translateY: this.state.slideOut}]
     }
-    const { first_name, last_name, email } = this.props
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAvoidingView style={styles.keyboardAvoid}>
+          <KeyboardAwareScrollView>
             <View>
-              <Text style={styles.text}>Hello {first_name} —</Text>
-              <Text style={styles.text_small}>Let's setup your password</Text>
+              <Text style={styles.text}>Let's update your bio</Text>
+              <Text style={styles.text_small}>Tell us something about yourself — this will be displayed on your profile</Text>
               <TextInput 
                 style={styles.input}
                 underlineColorAndroid='rgba(0,0,0,0)'
-                value={this.state.password}
-                onChangeText={password => this.setState({ password, errors: '' })}
+                value={this.state.bio}
+                onChangeText={bio => this.setState({ bio })}
                 onSubmitEditing={this._onSubmit}
-                placeholder='Password'
+                placeholder='Bio'
                 onFocus={() => this.setState({ errors: '' })}
                 blurOnSubmit={false}
-                ref={input => this.input = input}  
-                secureTextEntry={true}          
+                ref={input => this.input = input}   
+                multiline
               />
               {!!this.state.errors && <Text style={styles.invalid}>{this.state.errors}</Text>}
+              <View>
+                <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>
+                  <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View>
-              <TouchableOpacity onPress={() => this._onSubmit()} style={styles.button}>
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
         </Animated.View>
       </View>
     )

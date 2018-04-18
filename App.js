@@ -11,13 +11,15 @@ import Icons from 'react-native-vector-icons/Ionicons'
 
 import Welcome from './components/Welcome'
 import Login from './components/Login'
+import Home from './components/Home'
 
 import Name from './components/Signup/Name'
 import Email from './components/Signup/Email'
 import Password from './components/Signup/Password'
-import PasswordConfirm from './components/Signup/PasswordConfirm';
-import BioProfilePic from './components/Signup/BioProfilePic';
-import { PRIMARY_BLUE } from './constants/colors';
+import PasswordConfirm from './components/Signup/PasswordConfirm'
+import Bio from './components/Signup/Bio'
+import ProfilePicture from './components/Signup/ProfilePicture'
+import { PRIMARY_COLOR } from './constants/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -28,6 +30,10 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = {
+    authenticated: false
+  }
+
 
   loginBackButton = () => {
     return <Icons 
@@ -35,7 +41,8 @@ export default class App extends Component<Props> {
       style={styles.backIcon}
       onPress={() => {
         Actions.pop()
-      }}/>
+      }}
+      />
   }
   render() {
     return (
@@ -45,10 +52,15 @@ export default class App extends Component<Props> {
         >
           <Scene
             key='home'
-            title='UFind'
-            component={BioProfilePic}
+            title=''
+            component={Home}
             hideNavBar
             initial/>
+            <Scene
+              key='welcome'
+              title=''
+              component={Welcome}
+              hideNavBar/>
             <Scene 
               title=''
               key='login'
@@ -60,17 +72,6 @@ export default class App extends Component<Props> {
               renderBackButton={this.loginBackButton}
               backTitle='CANCEL'
               navTransparent/>
-            <Scene
-              navigationBarStyle={styles.nav}
-              key='signupFirstname' 
-              title=''
-              component={Name}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
             <Scene 
               navigationBarStyle={styles.nav}
               key='signupEmail' 
@@ -106,9 +107,20 @@ export default class App extends Component<Props> {
               />
             <Scene
               navigationBarStyle={styles.nav}
-              key='signupBioProfilePic' 
+              key='signupBio' 
               title=''
-              component={BioProfilePic}
+              component={Bio}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              />
+            <Scene
+              navigationBarStyle={styles.nav}
+              key='signupProfilePicture' 
+              title=''
+              component={ProfilePicture}
               navBarButtonColor='white'
               backButtonTintColor='white'
               backButtonTextStyle={styles.backButtonTextStyle}
@@ -147,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 0
   },
   nav: {
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     shadowColor: 'transparent',
     shadowRadius: 0,
     elevation: 0,

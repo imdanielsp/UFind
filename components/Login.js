@@ -8,12 +8,14 @@ import { Actions } from 'react-native-router-flux'
 // import Home from './Home'
 import Spinner from 'react-native-spinkit'
 
-import { PRIMARY_BLUE } from '../constants/colors'
+import { PRIMARY_COLOR } from '../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../constants/styles'
+import { ENDPOINT } from '../constants/api'
+
 type Props = {}
 export default class Login extends Component<Props> {
   state = { 
-    username: '',
+    email: '',
     password: '',
     isLoading: false,
     fadeAnim: new Animated.Value(0)
@@ -34,24 +36,23 @@ export default class Login extends Component<Props> {
   }
 
   onSubmit = () => {
-    const { username, password } = this.state
-    console.log(username, password)
-    // this.setState({ isLoading: true })
-    // const { username, password } = this.state
-    // const data = { username, password }
-    // axios.post('http://fierce-sands-22150.herokuapp.com/api/login', data)
-    // .then(async res => {
-    //   this.setState({ isLoading: false })
-    //   try {
-    //     await AsyncStorage.setItem('@token', res.data.token)
-    //     Actions.home()
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    // })
-    // .catch(err => {
-    //   console.log(err)
-    // })
+    const { email, password } = this.state
+    this.setState({ isLoading: true })
+    const payload = { email, password }
+    axios.post(`${ENDPOINT}/login`, payload)
+    .then(async res => {
+      console.log(res)
+      this.setState({ isLoading: false })
+      try {
+        await AsyncStorage.setItem('@token', res.data.access_token)
+        Actions.home()
+      } catch (e) {
+        console.log(e)
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
 
   render() {
@@ -73,7 +74,8 @@ export default class Login extends Component<Props> {
                 <Text style={styles.label}>Your E-mail</Text>
                 <TextInput
                   placeholder='University E-Mail'
-                  onChangeText={(username) => this.setState({username})}
+                  underlineColorAndroid='rgba(0,0,0,0)'
+                  onChangeText={(email) => this.setState({email})}
                   autoCapitalize='none'
                   style={styles.textInput}/>
               </View>
@@ -81,6 +83,7 @@ export default class Login extends Component<Props> {
                 <Text style={styles.label}>Password</Text>
                 <TextInput
                   placeholder='Your Password'
+                  underlineColorAndroid='rgba(0,0,0,0)'
                   onChangeText={(password) => this.setState({password})}
                   style={styles.textInput}
                   autoCapitalize='none'
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     paddingTop: '15%',
     paddingHorizontal: '3%',
   },
@@ -172,6 +175,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'circular',
-    color: PRIMARY_BLUE,
+    color: PRIMARY_COLOR,
   },
 })

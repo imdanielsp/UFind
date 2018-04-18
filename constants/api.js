@@ -1,1 +1,1 @@
-export const ENDPOINT = 'http://172.20.20.20:8080/ufind/api/v1'
+export const ENDPOINT = 'https://ufind-api.herokuapp.com/ufind/api/v1'

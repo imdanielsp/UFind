@@ -4,7 +4,7 @@ import { Text, View, TextInput, StyleSheet, Button,
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
 
-import { PRIMARY_BLUE } from '../../constants/colors'
+import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 
 type Props = {}
@@ -22,7 +22,7 @@ export default class Name extends Component<Props> {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 250,
       }
     ).start(done => {
       this.input.focus()
@@ -45,7 +45,7 @@ export default class Name extends Component<Props> {
       transform: [{
         translateY: this.state.fadeAnim.interpolate({
           inputRange: [0, 1],
-          outputRange: [1000, 0]
+          outputRange: [50, 0]
         })
       }, { translateY: this.state.slideOut}]
     }
@@ -84,7 +84,7 @@ export default class Name extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: PRIMARY_BLUE,
+    backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: '3%'
   },
   keyboardAvoid: {
