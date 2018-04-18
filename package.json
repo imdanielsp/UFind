@@ -1,6 +1,7 @@
 {
   "name": "ufind",
   "version": "0.0.1",
+  "proxy": "https://ufind-api.herokuapp.com/ufind/api/v1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -9,9 +10,15 @@
   "dependencies": {
     "@expo/vector-icons": "^6.3.1",
     "axios": "^0.18.0",
+    "jwt-decode": "^2.2.0",
+    "lodash-checkit": "^2.1.0",
     "lottie-react-native": "^2.3.2",
     "react": "^16.3.0-alpha.1",
     "react-native": "0.54.4",
+    "react-native-image-crop-picker": "^0.20.1",
+    "react-native-iphone-x-helper": "^1.0.2",
+    "react-native-keyboard-aware-scroll-view": "^0.5.0",
+    "react-native-material-bottom-navigation": "^0.9.0",
     "react-native-router-flux": "^4.0.0-beta.27",
     "react-native-spinkit": "^1.1.1",
     "react-native-vector-icons": "^4.6.0"

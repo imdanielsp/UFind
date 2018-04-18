@@ -5,12 +5,21 @@ import {
   Text,
   View
 } from 'react-native';
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
 import Icons from 'react-native-vector-icons/Ionicons'
 
 import Welcome from './components/Welcome'
 import Login from './components/Login'
-import Signup from './components/Signup'
+import Home from './components/Home'
+
+import Name from './components/Signup/Name'
+import Email from './components/Signup/Email'
+import Password from './components/Signup/Password'
+import PasswordConfirm from './components/Signup/PasswordConfirm'
+import Bio from './components/Signup/Bio'
+import ProfilePicture from './components/Signup/ProfilePicture'
+import { PRIMARY_COLOR } from './constants/colors'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -21,22 +30,37 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+  state = {
+    authenticated: false
+  }
+
+
   loginBackButton = () => {
     return <Icons 
       name="ios-arrow-round-back" 
       style={styles.backIcon}
-      onPress={() => Actions.pop()}/>
+      onPress={() => {
+        Actions.pop()
+      }}
+      />
   }
   render() {
     return (
       <Router>
-        <Stack key='root'>
+        <Stack key='root'
+          transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal })}
+        >
           <Scene
             key='home'
-            title='UFind'
-            component={Welcome}
+            title=''
+            component={Home}
             hideNavBar
             initial/>
+            <Scene
+              key='welcome'
+              title=''
+              component={Welcome}
+              hideNavBar/>
             <Scene 
               title=''
               key='login'
@@ -49,15 +73,60 @@ export default class App extends Component<Props> {
               backTitle='CANCEL'
               navTransparent/>
             <Scene 
-              key='signup' 
+              navigationBarStyle={styles.nav}
+              key='signupEmail' 
               title=''
-              component={Signup}
+              component={Email}
               navBarButtonColor='white'
               backButtonTintColor='white'
               backButtonTextStyle={styles.backButtonTextStyle}
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
-              navTransparent/>
+              />
+            <Scene 
+              navigationBarStyle={styles.nav}
+              key='signupPassword' 
+              title=''
+              component={Password}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              />
+            <Scene 
+              navigationBarStyle={styles.nav}
+              key='signupPasswordConfirm' 
+              title=''
+              component={PasswordConfirm}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              />
+            <Scene
+              navigationBarStyle={styles.nav}
+              key='signupBio' 
+              title=''
+              component={Bio}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              />
+            <Scene
+              navigationBarStyle={styles.nav}
+              key='signupProfilePicture' 
+              title=''
+              component={ProfilePicture}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.loginBackButton}
+              />
         </Stack>
       </Router>
     );
@@ -89,4 +158,11 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     marginBottom: 0
   },
+  nav: {
+    backgroundColor: PRIMARY_COLOR,
+    shadowColor: 'transparent',
+    shadowRadius: 0,
+    elevation: 0,
+    height: 50
+  }
 });
