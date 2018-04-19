@@ -15,11 +15,16 @@ import Welcome from './components/Welcome'
 import Login from './components/Login'
 import Home from './components/Home'
 
+// Signup Flow
 import Email from './components/Signup/Email'
 import Password from './components/Signup/Password'
 import PasswordConfirm from './components/Signup/PasswordConfirm'
 import Bio from './components/Signup/Bio'
 import ProfilePicture from './components/Signup/ProfilePicture'
+
+// Post Signup — Account Setup
+import SelectCategories from './components/Signup/PostSignup/SelectCategories'
+
 import { PRIMARY_COLOR } from './constants/colors'
 
 const instructions = Platform.select({
@@ -67,11 +72,18 @@ export default class App extends Component<Props> {
         </View>
       )
     }
+    // <Scene
+    // key='home'
+    // title=''
+    // component={SelectCategories}
+    // hideNavBar
+    // initial/>
     return (
       <Router>
         <Stack key='root'
           transitionConfig={
             () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
+
             <Scene
               key='home'
               title=''
@@ -193,5 +205,6 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 0,
     height: 50,
+    borderBottomWidth: 0,
   },
 });

@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     justifyContent: 'space-between',
-    height: '90%',
+    height: '88%',
     paddingHorizontal: 20,    
   },
   loadingContainer : {
