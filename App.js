@@ -41,17 +41,17 @@ export default class App extends Component<Props> {
     isLoading: false,
   }
 
-  async componentDidMount() {
-    try {
-      const token = await AsyncStorage.getItem('@token')
-      if(token) { 
-        this.setState({ authenticated: true, isLoading: false })
-      }
-    } catch (e) {
-      console.log(e)
-      this.setState({ isLoading: false })
-    }
-  }
+  // async componentDidMount() {
+  //   try {
+  //     const token = await AsyncStorage.getItem('@token')
+  //     if(token) { 
+  //       this.setState({ authenticated: true, isLoading: false })
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
+  //     this.setState({ isLoading: false })
+  //   }
+  // }
   
 
   loginBackButton = () => {
@@ -72,30 +72,29 @@ export default class App extends Component<Props> {
         </View>
       )
     }
-    // <Scene
-    // key='home'
-    // title=''
-    // component={SelectCategories}
-    // hideNavBar
-    // initial/>
+  //   <Scene
+  //   key='home'
+  //   title=''
+  //   component={Home}
+  //   hideNavBar
+  //   initial={this.state.authenticated}/>
+  // <Scene
+  //   key='welcome'
+  //   title=''
+  //   component={Welcome}
+  //   hideNavBar
+  //   initial={!this.state.authenticated}/>
     return (
       <Router>
         <Stack key='root'
           transitionConfig={
             () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
-
             <Scene
               key='home'
               title=''
-              component={Home}
+              component={SelectCategories}
               hideNavBar
-              initial={this.state.authenticated}/>
-            <Scene
-              key='welcome'
-              title=''
-              component={Welcome}
-              hideNavBar
-              initial={!this.state.authenticated}/>
+              initial/>
             <Scene 
               title=''
               key='login'
