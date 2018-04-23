@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, 
+import { Text, View, TextInput, StyleSheet, Button, Platform,
           TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import { KeyboardAvoidingView } from 'react-native-keyboard-aware-scroll-view'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
@@ -33,8 +33,10 @@ export default class Bio extends Component<Props> {
     Keyboard.dismiss()
     const { bio } = this.state
     if(bio === ''){
+      Keyboard.dismiss()
       Alert.alert('Empty Fields', `Please write something in your bio in order to continue.`)
     } else {
+      Keyboard.dismiss()
       Actions.push('signupProfilePicture', 
       { 
         first_name: this.props.first_name,
@@ -61,7 +63,10 @@ export default class Bio extends Component<Props> {
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAwareScrollView>
+          <KeyboardAvoidingView 
+            style={styles.keyboardAvoid} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
+            behavior='padding'>
             <View>
               <Text style={styles.text}>Let's update your bio</Text>
               <Text style={styles.text_small}>Tell us something about yourself — this will be displayed on your profile</Text>
@@ -72,17 +77,17 @@ export default class Bio extends Component<Props> {
                 onChangeText={bio => this.setState({ bio })}
                 onSubmitEditing={this._onSubmit}
                 placeholder='Bio'
-                blurOnSubmit={false}
+                blurOnSubmit={true}
                 ref={input => this.input = input}   
                 multiline
               />
-              <View>
-                <TouchableOpacity onPress={this._onSubmit} style={styles.button}>
-                  <Text style={styles.buttonText}>Next</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </KeyboardAwareScrollView>
+            <View>
+              <TouchableOpacity onPress={this._onSubmit} style={styles.button}>
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
         </Animated.View>
       </View>
     )
@@ -121,7 +126,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     margin: 'auto',
-    backgroundColor: 'rgba(255,255,255,0.25)'
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: 15
   },
   invalid: {
     color: 'red',

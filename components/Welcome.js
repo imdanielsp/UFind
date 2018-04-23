@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: PRIMARY_COLOR,
     fontSize: 24,
-    fontWeight: '600',
     fontFamily: 'circular'
   },
   instructions: {

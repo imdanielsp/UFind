@@ -5,7 +5,8 @@ import {
   Text,
   View,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
@@ -21,6 +22,7 @@ import Password from './components/Signup/Password'
 import PasswordConfirm from './components/Signup/PasswordConfirm'
 import Bio from './components/Signup/Bio'
 import ProfilePicture from './components/Signup/ProfilePicture'
+import ViewUser from './components/ViewUser/ViewUser'
 
 // Post Signup — Account Setup
 import SelectCategories from './components/Signup/PostSignup/SelectCategories'
@@ -41,17 +43,16 @@ export default class App extends Component<Props> {
     isLoading: false,
   }
 
-  // async componentDidMount() {
-  //   try {
-  //     const token = await AsyncStorage.getItem('@token')
-  //     if(token) { 
-  //       this.setState({ authenticated: true, isLoading: false })
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //     this.setState({ isLoading: false })
-  //   }
-  // }
+  async componentDidMount() {
+    try {
+      const token = await AsyncStorage.getItem('@token')
+      if(token) { 
+        Actions.push('home')
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
   
 
   loginBackButton = () => {
@@ -59,12 +60,33 @@ export default class App extends Component<Props> {
       name="ios-arrow-round-back" 
       style={styles.backIcon}
       onPress={() => {
-        Actions.pop()
+        Actions.pop({refresh:{}})
       }}
       />
   }
 
+  backButton = () => {
+    return (
+      <TouchableOpacity 
+        style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
+        onPress={ () => Actions.pop() }>
+        <Icons 
+          name="ios-arrow-back" 
+          style={{
+            fontSize: 36,
+            color: 'black',
+            paddingLeft: 15,
+            marginBottom: 0
+          }}/>
+        <Text style={{fontFamily: 'circular', fontSize: 18, paddingLeft: 15, paddingBottom: 3}}>
+          Back to Discover
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
   render() {
+    const { authenticated } = this.state
     if(this.state.isLoading) {
       return (
         <View style={styles.loadingContainer}>
@@ -72,29 +94,28 @@ export default class App extends Component<Props> {
         </View>
       )
     }
-  //   <Scene
-  //   key='home'
-  //   title=''
-  //   component={Home}
-  //   hideNavBar
-  //   initial={this.state.authenticated}/>
-  // <Scene
-  //   key='welcome'
-  //   title=''
-  //   component={Welcome}
-  //   hideNavBar
-  //   initial={!this.state.authenticated}/>
+
     return (
       <Router>
         <Stack key='root'
           transitionConfig={
             () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
-            <Scene
-              key='home'
-              title=''
-              component={SelectCategories}
-              hideNavBar
-              initial/>
+        <Scene
+          key='home'
+          title=''
+          component={Home}
+          hideNavBar/>
+        <Scene
+          key='welcome'
+          title=''
+          component={Welcome}
+          hideNavBar
+          initial/>
+        <Scene
+          key='selectCategories'
+          title=''
+          component={SelectCategories}
+          hideNavBar/>
             <Scene 
               title=''
               key='login'
@@ -162,6 +183,17 @@ export default class App extends Component<Props> {
               titleStyle={styles.titleStyle}
               renderBackButton={this.loginBackButton}
               />
+            <Scene
+              navigationBarStyle={styles.navWhite}
+              key='viewUser' 
+              title=''
+              component={ViewUser}
+              navBarButtonColor='white'
+              backButtonTintColor='white'
+              backButtonTextStyle={styles.backButtonTextStyle}
+              titleStyle={styles.titleStyle}
+              renderBackButton={this.backButton}
+              />  
         </Stack>
       </Router>
     );
@@ -200,6 +232,14 @@ const styles = StyleSheet.create({
   },
   nav: {
     backgroundColor: PRIMARY_COLOR,
+    shadowColor: 'transparent',
+    shadowRadius: 0,
+    elevation: 0,
+    height: 50,
+    borderBottomWidth: 0,
+  },
+  navWhite: {
+    backgroundColor: 'white',
     shadowColor: 'transparent',
     shadowRadius: 0,
     elevation: 0,

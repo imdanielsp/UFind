@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, Image,
-          TouchableOpacity, AsyncStorage, Animated,
+          TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -23,6 +23,7 @@ export default class Bio extends Component<Props> {
   }
 
   componentDidMount() {
+    Keyboard.dismiss()
     Animated.timing(
       this.state.fadeAnim,
       {
@@ -39,19 +40,20 @@ export default class Bio extends Component<Props> {
     const { first_name, last_name, email, password, bio } = this.props
     const payload = { first_name, last_name, email, password, bio, profile_image }
     this.setState({ isLoading: true })
+    console.log(profile_image)
     axios.post(`${ENDPOINT}/user`, payload)
     .then(async res => {
       const { access_token } = res.data
       try {
         await AsyncStorage.setItem('@token', JSON.stringify(res.data.access_token))
-        Actions.push('home')
+        Actions.push('selectCategories')
       } catch (e) {
         Alert.alert('Token Error', 'Somethig went wrong while setting up your account..')
         this.setState({ isLoading: false })
       }
     })
     .catch(err => { 
-      Alert.alert('Server Error', 'Somethig went wrong while signing up..')
+      Alert.alert('Server Error', 'Something went wrong while signing up..')
       this.setState({ isLoading: false })
     })
   }
@@ -60,10 +62,11 @@ export default class Bio extends Component<Props> {
     ImagePicker.openPicker({
       width: 160,
       height: 160,
-      compressImageQuality: 0.5,
+      compressImageQuality: 0.8,
       cropping: true,
       includeBase64: true
-    }).then(image => this.setState({ profile_image: `data:image/png;base64,${image.data}` }))
+    }).then(image => { 
+      this.setState({ profile_image: `data:image/png;base64,${image.data}` })})
   }
 
   render() {

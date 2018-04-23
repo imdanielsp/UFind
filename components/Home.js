@@ -41,19 +41,10 @@ class Home extends Component {
     async componentWillMount() {
       try {
         const token = await AsyncStorage.getItem('@token')
-        if(token) {
-          console.log(token)
-          // this.setState({ authenticated: true })
-        } else {
-          Actions.push('welcome')
-        }
+        if(!token) Actions.push('welcome')
       } catch (e) {
         console.log(e)
       }
-    }
-
-    onPress = item => {
-      Actions.push('listing', { item })
     }
 
     _goToProfile = async () => {
@@ -91,6 +82,10 @@ class Home extends Component {
           return <Chat />
           break;
       }
+    }
+
+    static onEnter = () => {
+      console.log('xx')
     }
 
     onChangeText = todo => this.setState({ todo })
@@ -137,16 +132,17 @@ class Home extends Component {
     homeContainer: {
       ...ifIphoneX({ paddingTop: 50}, {paddingTop: 20} ),
       flex: 1,
-      backgroundColor: 'white'
+      backgroundColor: 'white',
+      justifyContent: 'space-between'
     },
     bottomNavigation: { 
-      height: ifIphoneX(86, 56), 
+      height: ifIphoneX(86, 56),
       elevation: 8, 
-      position: 'absolute', 
-      left: 0, 
-      bottom: 0, 
-      right: 0,
-      paddingBottom: 0,
+      // position: 'absolute', 
+      // left: 0, 
+      // bottom: 0, 
+      // right: 0,
+      // paddingBottom: 0,
       borderTopWidth: 1,
       borderColor: '#eee'
      },
@@ -156,33 +152,3 @@ class Home extends Component {
   })
   
   export default Home
-
-            // {this._getRoute()}
-          // <BottomNavigation
-          //   labelColor={PRIMARY_COLOR}
-          //   rippleColor='#777'
-          //   style={styles.bottomNavigation}            
-          //   onTabChange={(newTabIndex) => alert(`New Tab at position ${newTabIndex}`)}
-          // >
-          //   <Tab
-          //     barBackgroundColor='white'
-          //     label='Home'
-          //     icon={<Ionicons size={24} color={PRIMARY_COLOR} 
-          //     name={this.state.currentTab === 'home' ? 'ios-home' : 'ios-home-outline'}/>}
-          //     onPress={this._goToHome}
-          //   />
-          //   <Tab
-          //     barBackgroundColor='white'
-          //     label='Messages'
-          //     icon={<Ionicons size={24} color={PRIMARY_COLOR} 
-          //       name={this.state.currentTab === 'messages' ? 'ios-chatbubbles' : 'ios-chatbubbles-outline'}/>}
-          //     onPress={this._goToMessages}
-          //   />
-          //   <Tab
-          //     barBackgroundColor='white'
-          //     label='Profile'
-          //     icon={<Ionicons size={24} color={PRIMARY_COLOR} 
-          //       name={this.state.currentTab === 'profile' ? 'ios-ionitron' : 'ios-ionitron-outline'}/>}
-          //     onPress={this._goToProfile}
-          //   />
-          // </BottomNavigation>     

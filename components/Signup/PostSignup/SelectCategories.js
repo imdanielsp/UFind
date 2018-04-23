@@ -6,6 +6,9 @@ import {
 import axios from 'axios'
 import LottieView from 'lottie-react-native'
 import lottieCheck from '../../../lottie/check.json'
+import Icons from 'react-native-vector-icons/Ionicons'
+import jwt_decode from 'jwt-decode'
+import { Actions } from 'react-native-router-flux'
 
 import { PRIMARY_COLOR } from '../../../constants/colors'
 import { ENDPOINT } from '../../../constants/api'
@@ -78,6 +81,31 @@ export default class SelectCategories extends Component {
     }
   }
 
+  // categories and email
+   _onSubmit = async () => {
+    const { categories } = this.state
+    
+    const selectedIds = []
+    categories.forEach(item => {
+      if(item.selected) selectedIds.push(item.id)
+    })
+    
+    try {
+      const token = await AsyncStorage.getItem('@token')
+      if(!token) console.log('nothin')
+      if(token) {
+        const { email } = jwt_decode(token).identity
+        axios.post(`${ENDPOINT}/category/subscribe`, { email, categories: selectedIds})
+        .then(res => {
+          Actions.push('home')
+        })
+        .catch(e => console.log(e))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   _onSelect = index => () => {
     const { categories } = this.state
     let currentCategory = categories[index]
@@ -88,7 +116,6 @@ export default class SelectCategories extends Component {
     let updatedCategory = categories
     updatedCategory[index] = currentCategory
     this.setState({ categories: updatedCategory })
-    console.log(this.state.categories)
   }
 
   _keyExtractor = (item, index) => item.name
@@ -118,6 +145,9 @@ export default class SelectCategories extends Component {
               extraData={this.state}/>
           </View>
         </View>
+        <TouchableOpacity onPress={this._onSubmit} style={styles.fab}>
+          <Icons name="ios-arrow-forward" color='white' size={30} />
+        </TouchableOpacity>
       </View>
     )
   }
@@ -141,7 +171,7 @@ const styles = StyleSheet.create({
     width: 110,
   },
   flatListContainer: {
-    height: '80%',
+    height: '70%',
   },
   option: {
     flex: 1,
@@ -166,5 +196,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#888',
     marginTop: 10
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: PRIMARY_COLOR,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 75,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 1,
   }
 })

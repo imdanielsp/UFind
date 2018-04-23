@@ -121,9 +121,10 @@ export default class Profile extends Component {
           </View>
         </View>
 
-        <Text onPress={this._onLogout} style={styles.logoutButton}>
-          Logout
-        </Text>
+        <TouchableOpacity onPress={this._onLogout} style={styles.logoutButton}>
+          <Text style={styles.logoutText}>Logout</Text>
+          <Icons name='ios-log-out' color='white' size={28} />
+        </TouchableOpacity>
       </Animated.View>
     )
   }
@@ -195,15 +196,21 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     backgroundColor: PRIMARY_COLOR,
-    color: 'white',
-    letterSpacing: 2,
-    fontWeight: '700',
-    paddingVertical: 20,
-    textAlign: 'center',
-    fontSize: 18,
-    fontFamily: 'circular',
+    paddingVertical: 16,
     marginTop: 20,
-    borderRadius: 5
+    borderRadius: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  logoutText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 22,
+    fontFamily: 'circular',
+    textAlign: 'center',
+    paddingHorizontal: 15,
+    paddingBottom: 3
   },
   profileOptionContainer: {
     borderTopWidth: 1,

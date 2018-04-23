@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, Alert,
-          TouchableOpacity, AsyncStorage, Animated, 
+          TouchableOpacity, AsyncStorage, Animated, Platform,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -58,7 +58,10 @@ export default class PasswordConfirm extends Component<Props> {
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAvoidingView style={styles.keyboardAvoid}>
+          <KeyboardAvoidingView 
+            style={styles.keyboardAvoid} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0} 
+            behavior='padding'>
             <View>
               <Text style={styles.text}>Confirm —</Text>
               <Text style={styles.text_small}>Please type your password again to ensure that it's correct</Text>
@@ -118,7 +121,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     margin: 'auto',
-    backgroundColor: 'rgba(255,255,255,0.25)'
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    padding: 10
   },
   invalid: {
     color: 'red',

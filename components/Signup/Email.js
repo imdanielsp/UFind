@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, 
+import { Text, View, TextInput, StyleSheet, Button, Platform,
           TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 import axios from 'axios'
@@ -78,7 +78,10 @@ export default class Email extends Component<Props> {
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAvoidingView style={styles.keyboardAvoid}>
+          <KeyboardAvoidingView 
+            style={styles.keyboardAvoid} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0} 
+            behavior='padding'>
             <View>
               <Text style={styles.text}>Hello —</Text>
               <Text style={styles.text_small}>UFind requires you to have a UMass Lowell student email.</Text>
@@ -90,7 +93,10 @@ export default class Email extends Component<Props> {
                 onSubmitEditing={this._onSubmit}
                 placeholder='Email'
                 blurOnSubmit={false}
-                ref={input => this.input = input}            
+                ref={input => this.input = input} 
+                autoCorrect={false}       
+                autoCapitalize='none'
+                clearButtonMode='while-editing'
               />
             </View>
             <View>
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '3%'
   },
   keyboardAvoid: {
-    height: '98%',
+    height: '100%',
     justifyContent: 'space-between',
   },
   text: {
@@ -136,11 +142,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'left',
     color: 'white',
     margin: 'auto',
-    backgroundColor: 'rgba(255,255,255,0.25)'
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    fontFamily: 'circular',
+    padding: 14
   },
   invalid: {
     color: 'red',
@@ -160,8 +168,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 50,
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
     elevation: 1,
   },
   buttonText: {

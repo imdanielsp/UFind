@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, 
+import { Text, View, TextInput, StyleSheet, Button, Platform,
           TouchableOpacity, AsyncStorage, Animated, Alert,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
@@ -58,7 +58,10 @@ export default class Password extends Component<Props> {
     return (
       <View style={styles.container}>
         <Animated.View style={[styles.content, containerAnimation]}>
-          <KeyboardAvoidingView style={styles.keyboardAvoid}>
+          <KeyboardAvoidingView 
+            style={styles.keyboardAvoid} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0} 
+            behavior='padding'>
             <View>
               <Text style={styles.text}>Hello {first_name} —</Text>
               <Text style={styles.text_small}>Let's setup your password</Text>
@@ -118,7 +121,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     margin: 'auto',
-    backgroundColor: 'rgba(255,255,255,0.25)'
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    padding: 10
   },
   invalid: {
     color: 'red',
