@@ -72,7 +72,7 @@ export default class App extends Component<Props> {
       name="ios-arrow-round-back" 
       style={styles.backIcon}
       onPress={() => {
-        Actions.pop({refresh:{}})
+        Actions.push({refresh:{}})
       }}
       />
   }
@@ -81,7 +81,7 @@ export default class App extends Component<Props> {
     return (
       <TouchableOpacity 
         style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
-        onPress={ () => Actions.pop() }>
+        onPress={ () => Actions.push('discover') }>
         <Icons 
           name="ios-arrow-back" 
           style={{
@@ -122,7 +122,7 @@ export default class App extends Component<Props> {
               hideNavBar
               icon={TabIcon}
               component={Discover}
-              initial/>
+              />
             <Scene
               key='chat'
               title='Chat'
@@ -130,7 +130,7 @@ export default class App extends Component<Props> {
               iconName='ios-chatbubbles'
               hideNavBar
               icon={TabIcon}
-              component={Chat}/>
+              component={Chat} initial/>
             <Scene
               key='profile'
               title='Profile'

@@ -52,7 +52,7 @@ export default class Bio extends Component<Props> {
           </View>
           <View style={styles.bioContainer}>
             <Text style={styles.smallHeader}>Bio</Text>
-            <Text style={styles.smallText}>{bio} {bio}</Text>
+            <Text style={styles.smallText}>{bio}</Text>
           </View>
           <View style={styles.interestContainer}>
             <Text style={styles.smallHeader}>{first_name}'s Interests</Text>
@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   smallText: {
-    fontFamily: 'circular',
+    fontWeight: '300',
+    paddingTop: 5,
     color: '#888',
     fontSize: 16
   },

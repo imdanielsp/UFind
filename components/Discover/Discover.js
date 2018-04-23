@@ -33,6 +33,7 @@ export default class Profile extends Component {
   }
 
   static onEnter() {
+    console.log(this.state.currentUser)
     console.log('fetching....')
     const { id } = this.state.currentUser.identity
     axios.get(`${ENDPOINT}/category/subscription/discover/${id}`)
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15
   },
   titleSmall: {
-    fontFamily: 'circular',
+    fontWeight: '300',
     fontSize: 18,
     color: '#999'
   },
