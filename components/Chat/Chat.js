@@ -26,8 +26,10 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: '90%',
-    paddingHorizontal: '2%'
+    paddingTop: '7%',
+    backgroundColor: 'white',
+    height: '100%',
+    paddingHorizontal: '2%',
   },
   title: {
     fontFamily: 'circular',

@@ -97,7 +97,7 @@ export default class SelectCategories extends Component {
         const { email } = jwt_decode(token).identity
         axios.post(`${ENDPOINT}/category/subscribe`, { email, categories: selectedIds})
         .then(res => {
-          Actions.push('home')
+          Actions.push('discover')
         })
         .catch(e => console.log(e))
       }

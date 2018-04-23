@@ -85,10 +85,9 @@ class Home extends Component {
     }
 
     static onEnter = () => {
-      console.log('xx')
+      Discover.forceUpdate()
     }
 
-    onChangeText = todo => this.setState({ todo })
     render() {
       return (
         <View style={styles.homeContainer}>

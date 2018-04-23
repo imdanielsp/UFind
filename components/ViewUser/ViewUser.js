@@ -31,7 +31,6 @@ export default class Bio extends Component<Props> {
 
   _onSubmit = () => {
     const { user_a, user_b, connected } = this.state
-    console.log(connected)
     if(connected) return
     this.setState({ loading: true })
     axios.post(`${ENDPOINT}/connection`, { user_a, user_b })
@@ -160,6 +159,7 @@ const styles = StyleSheet.create({
     fontFamily: 'circular',
     color: 'white',
     fontSize: 20,
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    paddingBottom: 4
   }
 })

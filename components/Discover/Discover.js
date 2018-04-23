@@ -32,13 +32,23 @@ export default class Profile extends Component {
     progress: new Animated.Value(0)
   }
 
+  static onEnter() {
+    console.log('fetching....')
+    const { id } = this.state.currentUser.identity
+    axios.get(`${ENDPOINT}/category/subscription/discover/${id}`)
+    .then(res => {
+      console.log('done!')
+      this.setState({ users: res.data })
+      setTimeout(() => this.setState({ loading: false }), 250)
+    })
+  }
+
   async componentDidMount() {
     Animated.timing(this.state.progress, {
       toValue: 1,
       duration: 1000,
       easing: Easing.linear,
     }).start()
-    console.log('mounted')
     const token = await AsyncStorage.getItem('@token')
     try {
       if(token) { 
@@ -50,12 +60,12 @@ export default class Profile extends Component {
     }
   }
 
-  fetchDiscover = async () => {
+  fetchDiscover = () => {
     const { id } = this.state.currentUser.identity
     axios.get(`${ENDPOINT}/category/subscription/discover/${id}`)
     .then(res => {
       this.setState({ users: res.data })
-      setTimeout(() => this.setState({ loading: false }), 1000)
+      setTimeout(() => this.setState({ loading: false }), 250)
     })
   }
 
@@ -68,6 +78,7 @@ export default class Profile extends Component {
       else 
         commonInterests += `and ${currentInterest.name}.`
     })
+
     return (
       <TouchableOpacity 
         style={styles.userContainer}
@@ -93,10 +104,11 @@ export default class Profile extends Component {
     if(loading) {
       return (
         <View style={styles.loadingContainer}>
-        <LottieView source={lottieFile} loop 
-        ref={animation => {
-          if (animation) animation.play()
-        }}/>
+          <LottieView source={lottieFile} 
+            loop 
+            ref={animation => {
+              if (animation) animation.play()
+            }}/>
         </View>
       )
     }
@@ -107,7 +119,7 @@ export default class Profile extends Component {
         <View style={styles.flatListContainer}>
           <FlatList
             data={users}
-            renderItem={this._renderItem } 
+            renderItem={this._renderItem} 
             keyExtractor={this._keyExtractor}
             extraData={this.state}
             refreshing={this.state.loading}
@@ -121,12 +133,15 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: '2%',
+    paddingTop: '7%',
+    paddingHorizontal: '3%',
+    backgroundColor: 'white'
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   title: {
     fontFamily: 'circular',
@@ -137,10 +152,10 @@ const styles = StyleSheet.create({
   titleSmall: {
     fontFamily: 'circular',
     fontSize: 18,
-    color: '#bbb'
+    color: '#999'
   },
   flatListContainer: {
-    height: '75%',
+    height: '80%',
   },
   profilePic: {
     height: 100,
