@@ -19,6 +19,7 @@ import Home from './components/Home'
 // Tabs
 import Discover from './components/Discover/Discover'
 import Chat from './components/Chat/Chat'
+  import ChatThread from './components/Chat/ChatThread'
 import Profile from './components/Profile/Profile'
 
 // Signup Flow
@@ -72,16 +73,17 @@ export default class App extends Component<Props> {
       name="ios-arrow-round-back" 
       style={styles.backIcon}
       onPress={() => {
-        Actions.push({refresh:{}})
+        Actions.pop()
       }}
       />
   }
 
-  backButton = () => {
+  backButton = title => {
+    const onPress = title === 'Discover' ? () => Actions.push('discover') : () => Actions.pop()
     return (
       <TouchableOpacity 
         style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
-        onPress={ () => Actions.push('discover') }>
+        onPress={onPress}>
         <Icons 
           name="ios-arrow-back" 
           style={{
@@ -91,7 +93,7 @@ export default class App extends Component<Props> {
             marginBottom: 0
           }}/>
         <Text style={{fontFamily: 'circular', fontSize: 18, paddingLeft: 15, paddingBottom: 3}}>
-          Back to Discover
+          {title === 'Discover' ? `Back to ${title}` : 'Back'}
         </Text>
       </TouchableOpacity>
     )
@@ -226,7 +228,17 @@ export default class App extends Component<Props> {
             backButtonTintColor='white'
             backButtonTextStyle={styles.backButtonTextStyle}
             titleStyle={styles.titleStyle}
-            renderBackButton={this.backButton} />
+            renderBackButton={() => this.backButton('Discover')} />
+          <Scene
+            navigationBarStyle={styles.navWhite}
+            key='chatThread' 
+            title=''
+            component={ChatThread}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={() => this.backButton('Chat')} />
         </Stack>
       </Router>
     );

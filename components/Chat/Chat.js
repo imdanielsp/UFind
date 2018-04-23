@@ -11,8 +11,10 @@ import {
   NavigatorIOS,
   TouchableOpacity,
   AppState,
-  AsyncStorage
+  AsyncStorage,
+  StatusBar
 } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import Icons from 'react-native-vector-icons/Ionicons'
 
 const chats = [
@@ -65,6 +67,8 @@ export default class Profile extends Component {
 
   render() {
     return (
+      <View>
+      <StatusBar backgroundColor='white' barStyle="dark-content" />
       <View style={styles.container}>
         <Text style={styles.title}>Chat</Text>
         <Text style={styles.smallTitle}>
@@ -76,6 +80,7 @@ export default class Profile extends Component {
           keyExtractor={this._keyExtractor}
           extraData={this.state}
           onRefresh={this.fetchDiscover}/>
+      </View>
       </View>
     )
   }
