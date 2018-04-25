@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
-import lottieFile from '../lottie/map.json'
+import lottieFile from '../lottie/map_animation.json'
 
 import { PRIMARY_COLOR } from '../constants/colors'
 
@@ -26,6 +26,7 @@ type Props = {};
 export default class App extends Component<Props> {
   state = {
     progress: new Animated.Value(0),
+    animate: true
   }
 
   componentDidMount() {
@@ -48,6 +49,18 @@ export default class App extends Component<Props> {
           <Text style={styles.title}>UFind —</Text>
           <Text style={styles.titleIntro}>A university community driven application to search for activities or friends.</Text>
         </View>
+        {
+          this.state.animate && (
+            <View style={{position: 'absolute', height: '120%', width: '100%'}}>
+              <LottieView source={lottieFile}       
+                loop      
+                ref={animation => {
+                  if (animation) animation.play()
+                }}/>
+            </View>
+          )
+        }
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={this.goToLogin} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>

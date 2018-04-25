@@ -28,7 +28,8 @@ export default class Profile extends Component {
   state = {
     currentUser: {},
     conversations: [],
-    loading: true
+    loading: true,
+    initalFetch: true
   }
 
   async componentDidMount() {
@@ -44,7 +45,7 @@ export default class Profile extends Component {
   fetchChat = () => {
     axios.get(`${ENDPOINT}/conversation/all/${this.state.currentUser.id}`)
     .then(res =>{
-      this.setState({ conversations: res.data, loading: false })
+      this.setState({ conversations: res.data, loading: false, initialFetch: false })
     })
     .catch(e => console.log(e))
   }
@@ -76,7 +77,19 @@ export default class Profile extends Component {
   _keyExtractor = (item, index) => String(item.conversation_id)
 
   render() {
-    const hasConversations = this.state.conversations.length > 0
+    if(this.state.initialFetch) {
+      return (
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <LottieView source={lottieLoading}             
+              ref={animation => {
+                if (animation) animation.play()
+              }}/>
+          </View>
+        </View>
+      )
+    }
+    const hasConversations = this.state.conversations.length > 0 || this.state.loading
     return (
       <View>
       <StatusBar backgroundColor='white' barStyle="dark-content" />
@@ -122,6 +135,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
     paddingHorizontal: '2%',
+  },
+  loadingContainer: {
+    flex: 1,
+  },
+  loadingContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   title: {
     fontFamily: 'circular',

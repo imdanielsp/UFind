@@ -84,11 +84,11 @@ export default class Bio extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView style={styles.keyboardAvoid}>
             <View>
-              <Text style={styles.text}>Upload a profile picture —</Text>
+              <Text style={styles.text}>{profile_image === null ? 'Upload a profile picture —' : 'Looking good!'}</Text>
               <Text style={styles.text_small}>
                 {profile_image === null
                  ? 'Add a picture of yourself so others can see what you look like'
-                 : 'Looking good! Complete the signup process or choose a different photo '
+                 : 'You can continue with the signup process or choose a different photo '
                 }
               </Text>
             </View>

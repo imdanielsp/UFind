@@ -227,27 +227,4 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 10
   },
-  fab: {
-    flexDirection: 'row',
-    backgroundColor: PRIMARY_COLOR,
-    width: '100%',
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 1,
-  },
-  fabText: {
-    fontFamily: 'circular',
-    color: 'white',
-    fontSize: 20
-  },
-  fabIcon: {
-    marginTop: 5,
-    paddingHorizontal: 5
-  }
 })

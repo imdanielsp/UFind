@@ -135,7 +135,7 @@ class Home extends Component {
       justifyContent: 'space-between'
     },
     bottomNavigation: { 
-      height: ifIphoneX(86, 56),
+      height: ifIphoneX(60, 56),
       elevation: 8, 
       // position: 'absolute', 
       // left: 0, 

@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   AppState,
   AsyncStorage,
-  Animated, Easing
+  Animated, Easing, ActivityIndicator
 } from 'react-native'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
@@ -53,8 +53,7 @@ export default class Profile extends Component {
     const { id } = this.state.currentUser
     axios.get(`${ENDPOINT}/category/subscription/discover/${id}`)
     .then(res => {
-      this.setState({ users: res.data })
-      setTimeout(() => this.setState({ loading: false }), 250)
+      this.setState({ users: res.data, loading: false })
     })
   }
 
@@ -108,6 +107,11 @@ export default class Profile extends Component {
     //     </View>
     //   )
     // }
+    // <LottieView source={lottieFile} 
+    // loop 
+    // ref={animation => {
+    //   if (animation) animation.play()
+    // }}/>
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Discover</Text>
@@ -116,12 +120,8 @@ export default class Profile extends Component {
           {
             loading
             ? (
-              <View style={{height: '145%', width: '100%', marginTop: '4%'}}>
-                <LottieView source={lottieFile} 
-                  loop 
-                  ref={animation => {
-                    if (animation) animation.play()
-                  }}/>
+              <View style={{flex: 1, justifyContent: 'center'}}>
+                <ActivityIndicator color={PRIMARY_COLOR} size='large' />
               </View>
             )
             : (
