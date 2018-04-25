@@ -6,6 +6,8 @@ import {
 import axios from 'axios'
 import LottieView from 'lottie-react-native'
 import lottieCheck from '../../../lottie/check.json'
+import lottieDone from '../../../lottie/done.json'
+import lottieLoading from '../../../lottie/loading.json'
 import Icons from 'react-native-vector-icons/Ionicons'
 import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -43,14 +45,16 @@ class Check extends Component {
 export default class SelectCategories extends Component {
   state = {
     categories: null,
-    isLoading: true,
     selected: [],
-    progress: new Animated.Value(0)
+    progress: new Animated.Value(0),
+    isLoading: true,
+    done: false,
   }
 
   async componentDidMount() {
     const res = await axios.get(`${ENDPOINT}/category`)
-    if(res) this.setState({ categories: res.data, isLoading: false })
+    if(res) this.setState({ categories: res.data })
+    setTimeout(() => this.setState({ isLoading: false }), 1000)
   }
 
   _renderItem = ({ item, index }) => { 
@@ -92,14 +96,14 @@ export default class SelectCategories extends Component {
     
     try {
       const token = await AsyncStorage.getItem('@token')
-      if(!token) console.log('nothin')
       if(token) {
         const { email } = jwt_decode(token).identity
+           this.setState({ done: true })
         axios.post(`${ENDPOINT}/category/subscribe`, { email, categories: selectedIds})
-        .then(res => {
-          Actions.push('home')
-        })
+        .then(res => setTimeout(() => Actions.push('discover'), 1500))
         .catch(e => console.log(e))
+      } else {
+        Actions.push('welcome')
       }
     } catch (e) {
       console.log(e)
@@ -121,12 +125,30 @@ export default class SelectCategories extends Component {
   _keyExtractor = (item, index) => item.name
 
   render() {
-    const { categories, isLoading } = this.state
+    const { categories, isLoading, done } = this.state
+    if(done) {
+      return (
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <View style={{width: '70%', height: '100%',marginLeft: '12%'}}>
+              <LottieView source={lottieDone}   
+                loop={false}          
+                ref={animation => {
+                  if (animation) animation.play()
+                }}/>
+            </View>
+          </View>
+        </View>
+      )
+    }
     if(isLoading) {
       return (
-        <View style={styles.container}>
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator color={PRIMARY_COLOR} size='large' />
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <LottieView source={lottieLoading}             
+              ref={animation => {
+                if (animation) animation.play()
+              }}/>
           </View>
         </View>
       )
@@ -135,18 +157,20 @@ export default class SelectCategories extends Component {
       <View style={styles.container}>
         <StatusBar backgroundColor='white' barStyle="dark-content" />
         <View style={styles.content}>
-          <Text style={styles.header}>Almost done!</Text>
+          <Text style={styles.header}>Almost done —</Text>
           <Text style={styles.smallText}>In order to create connections between you and other students with similar interests, please select all categories that applies.</Text>
           <View style={styles.flatListContainer}>
             <FlatList
               data={categories}
               renderItem={this._renderItem } 
               keyExtractor={this._keyExtractor}
-              extraData={this.state}/>
+              extraData={this.state}
+              showsHorizontalScrollIndicator={false}/>
           </View>
         </View>
         <TouchableOpacity onPress={this._onSubmit} style={styles.fab}>
-          <Icons name="ios-arrow-forward" color='white' size={30} />
+          <Text style={styles.fabText}>Save preference</Text>
+          <Icons name="ios-checkmark-circle" color='white' size={24} style={styles.fabIcon}/>
         </TouchableOpacity>
       </View>
     )
@@ -157,21 +181,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    padding: '4%',
+    justifyContent: 'space-between',
   },
   content: {
-    flex: 1,
-    paddingHorizontal: '2%',
-    paddingVertical: '4%',    
+    paddingVertical: '2%',    
   },
   loadingContainer: {
-    justifyContent: 'center'
+    flex: 1,
+  },
+  loadingContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   lottieContainer: {
     height: 110,
     width: 110,
   },
   flatListContainer: {
-    height: '70%',
+    height: '75%',
   },
   option: {
     flex: 1,
@@ -198,19 +228,26 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   fab: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
+    flexDirection: 'row',
     backgroundColor: PRIMARY_COLOR,
-    width: 60,
-    height: 60,
+    width: '100%',
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 75,
+    borderRadius: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
     elevation: 1,
+  },
+  fabText: {
+    fontFamily: 'circular',
+    color: 'white',
+    fontSize: 20
+  },
+  fabIcon: {
+    marginTop: 5,
+    paddingHorizontal: 5
   }
 })

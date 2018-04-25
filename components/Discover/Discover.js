@@ -19,7 +19,7 @@ import jwt_decode from 'jwt-decode'
 import Icons from 'react-native-vector-icons/Ionicons'
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
-import lottieFile from '../../lottie/lego_loader.json'
+import lottieFile from '../../lottie/skeleton.json'
 
 import { ENDPOINT } from '../../constants/api'
 import { PRIMARY_COLOR } from '../../constants/colors';
@@ -38,11 +38,10 @@ export default class Profile extends Component {
       duration: 1000,
       easing: Easing.linear,
     }).start()
-    console.log('mounted')
     const token = await AsyncStorage.getItem('@token')
     try {
       if(token) { 
-        this.setState({ currentUser: jwt_decode(token) })
+        this.setState({ currentUser: jwt_decode(token).identity })
         this.fetchDiscover()
       }
     } catch(e) {
@@ -50,12 +49,12 @@ export default class Profile extends Component {
     }
   }
 
-  fetchDiscover = async () => {
-    const { id } = this.state.currentUser.identity
+  fetchDiscover = () => {
+    const { id } = this.state.currentUser
     axios.get(`${ENDPOINT}/category/subscription/discover/${id}`)
     .then(res => {
       this.setState({ users: res.data })
-      setTimeout(() => this.setState({ loading: false }), 1000)
+      setTimeout(() => this.setState({ loading: false }), 250)
     })
   }
 
@@ -63,15 +62,21 @@ export default class Profile extends Component {
     const { first_name, last_name, id, email, bio, profile_image } = item.user
     let commonInterests = ''
     item.common.forEach((currentInterest, index) => {
-      if(index !== (item.common.flength - 1))
+      if(index !== (item.common.length - 1))
         commonInterests += `${currentInterest.name}, `
       else 
         commonInterests += `and ${currentInterest.name}.`
     })
+
     return (
       <TouchableOpacity 
         style={styles.userContainer}
-        onPress={() => Actions.push('viewUser', { user: item.user, viewer: this.state.currentUser  })}>
+        onPress={
+          () => Actions.push('viewUser', { 
+            user: item.user, 
+            viewer: this.state.currentUser,
+            backTo: 'discover'
+          })}>
         <View style={styles.userInfo}>
           <Image 
             source={{ uri: !profile_image.includes('base64') ? `data:image/png;base64,${profile_image}` : profile_image }} 
@@ -90,28 +95,46 @@ export default class Profile extends Component {
 
   render() {
     const { users, loading } = this.state
-    if(loading) {
-      return (
-        <View style={styles.loadingContainer}>
-        <LottieView source={lottieFile} loop 
-        ref={animation => {
-          if (animation) animation.play()
-        }}/>
-        </View>
-      )
-    }
+    // if(loading) {
+    //   return (
+    //     <View style={styles.loadingContainer}>
+    //       <View style={{height: '100%', width: '100%', marginTop: '20%'}}>
+    //         <LottieView source={lottieFile} 
+    //           loop 
+    //           ref={animation => {
+    //             if (animation) animation.play()
+    //           }}/>
+    //       </View>
+    //     </View>
+    //   )
+    // }
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Discover</Text>
         <Text style={styles.titleSmall}>We've generated a list of users who share the same interest at you. Browse through and interact with them!</Text>
         <View style={styles.flatListContainer}>
-          <FlatList
-            data={users}
-            renderItem={this._renderItem } 
-            keyExtractor={this._keyExtractor}
-            extraData={this.state}
-            refreshing={this.state.loading}
-            onRefresh={this.fetchDiscover}/>
+          {
+            loading
+            ? (
+              <View style={{height: '145%', width: '100%', marginTop: '4%'}}>
+                <LottieView source={lottieFile} 
+                  loop 
+                  ref={animation => {
+                    if (animation) animation.play()
+                  }}/>
+              </View>
+            )
+            : (
+              <FlatList
+              data={users}
+              renderItem={this._renderItem} 
+              keyExtractor={this._keyExtractor}
+              extraData={this.state}
+              refreshing={this.state.loading}
+              onRefresh={this.fetchDiscover}/>
+            )
+          }
+
         </View>
       </View>
     )
@@ -121,12 +144,15 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: '2%',
+    paddingTop: '7%',
+    paddingHorizontal: '3%',
+    backgroundColor: 'white'
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   title: {
     fontFamily: 'circular',
@@ -135,12 +161,12 @@ const styles = StyleSheet.create({
     paddingBottom: 15
   },
   titleSmall: {
-    fontFamily: 'circular',
+    fontWeight: '300',
     fontSize: 18,
-    color: '#bbb'
+    color: '#999'
   },
   flatListContainer: {
-    height: '75%',
+    height: '82%',
   },
   profilePic: {
     height: 100,

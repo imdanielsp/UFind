@@ -40,7 +40,6 @@ export default class Bio extends Component<Props> {
     const { first_name, last_name, email, password, bio } = this.props
     const payload = { first_name, last_name, email, password, bio, profile_image }
     this.setState({ isLoading: true })
-    console.log(profile_image)
     axios.post(`${ENDPOINT}/user`, payload)
     .then(async res => {
       const { access_token } = res.data

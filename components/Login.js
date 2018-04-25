@@ -59,7 +59,7 @@ export default class Login extends Component<Props> {
         this.setState({ isLoading: false })
         try {
           await AsyncStorage.setItem('@token', res.data.access_token)
-          Actions.home()
+          Actions.push('discover')
         } catch (e) {
           console.log(e)
         }

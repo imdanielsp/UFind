@@ -16,6 +16,13 @@ import Welcome from './components/Welcome'
 import Login from './components/Login'
 import Home from './components/Home'
 
+// Tabs
+import Discover from './components/Discover/Discover'
+import Chat from './components/Chat/Chat'
+  import ChatThread from './components/Chat/ChatThread'
+import Profile from './components/Profile/Profile'
+  import Connections from './components/Profile/Connections'
+
 // Signup Flow
 import Email from './components/Signup/Email'
 import Password from './components/Signup/Password'
@@ -29,12 +36,19 @@ import SelectCategories from './components/Signup/PostSignup/SelectCategories'
 
 import { PRIMARY_COLOR } from './constants/colors'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const TabIcon = ({ focused, title, iconName }) => {
+  const color = focused ? PRIMARY_COLOR : '#999'
+  return (
+  <View style={{width: 100, height: 70, justifyContent: 'center', alignItems: 'center'}}>
+    <Icons 
+      name={focused ? iconName : `${iconName}-outline` } 
+      size={28} 
+      color={color} />
+    <Text style={{fontSize: 14, fontFamily: 'circular', color }}>
+      {title}
+    </Text>
+  </View>
+)}
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -44,10 +58,11 @@ export default class App extends Component<Props> {
   }
 
   async componentDidMount() {
+    window.navigator.userAgent = 'ReactNative';
     try {
       const token = await AsyncStorage.getItem('@token')
-      if(token) { 
-        Actions.push('home')
+      if(!token) { 
+        Actions.push('welcome')
       }
     } catch (e) {
       console.log(e)
@@ -60,16 +75,17 @@ export default class App extends Component<Props> {
       name="ios-arrow-round-back" 
       style={styles.backIcon}
       onPress={() => {
-        Actions.pop({refresh:{}})
+        Actions.pop()
       }}
       />
   }
 
-  backButton = () => {
+  backButton = title => {
+    const onPress = title === 'Chat' ? () => Actions.push('chat') : () => Actions.pop()
     return (
       <TouchableOpacity 
         style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
-        onPress={ () => Actions.pop() }>
+        onPress={onPress}>
         <Icons 
           name="ios-arrow-back" 
           style={{
@@ -79,10 +95,11 @@ export default class App extends Component<Props> {
             marginBottom: 0
           }}/>
         <Text style={{fontFamily: 'circular', fontSize: 18, paddingLeft: 15, paddingBottom: 3}}>
-          Back to Discover
+          Back
         </Text>
       </TouchableOpacity>
     )
+    // {title === 'Discover' ? `Back to ${title}` : 'Back'}
   }
 
   render() {
@@ -100,100 +117,141 @@ export default class App extends Component<Props> {
         <Stack key='root'
           transitionConfig={
             () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
-        <Scene
-          key='home'
-          title=''
-          component={Home}
-          hideNavBar/>
-        <Scene
-          key='welcome'
-          title=''
-          component={Welcome}
-          hideNavBar
-          initial/>
-        <Scene
-          key='selectCategories'
-          title=''
-          component={SelectCategories}
-          hideNavBar/>
-            <Scene 
-              title=''
-              key='login'
-              component={Login}
-              navigationBarStyle={styles.nav}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              backTitle='CANCEL'
-              />
-            <Scene 
-              navigationBarStyle={styles.nav}
-              key='signupEmail' 
-              title=''
-              component={Email}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
+          <Scene key='main' tabBarStyle={styles.tabBar} tabBarPosition='bottom' tabs>
             <Scene
-              navigationBarStyle={styles.nav}
-              key='signupPassword' 
-              title=''
-              component={Password}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
-            <Scene 
-              navigationBarStyle={styles.nav}
-              key='signupPasswordConfirm' 
-              title=''
-              component={PasswordConfirm}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
+              key='discover'
+              title='Discover'
+              tabBarLabel=' '
+              titleStyle={styles.tabTitle}
+              iconName='ios-contacts'
+              hideNavBar
+              icon={TabIcon}
+              component={Discover}
+              initial/>
             <Scene
-              navigationBarStyle={styles.nav}
-              key='signupBio' 
-              title=''
-              component={Bio}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
+              key='chat'
+              title='Chat'
+              tabBarLabel=' '
+              iconName='ios-chatbubbles'
+              hideNavBar
+              icon={TabIcon}
+              component={Chat} />
             <Scene
-              navigationBarStyle={styles.nav}
-              key='signupProfilePicture' 
-              title=''
-              component={ProfilePicture}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.loginBackButton}
-              />
+              key='profile'
+              title='Profile'
+              tabBarLabel=' '
+              iconName='ios-contact'
+              hideNavBar
+              icon={TabIcon}
+              component={Profile}/>
+          </Scene>
+          <Scene
+            key='welcome'
+            title=''
+            component={Welcome}
+            hideNavBar/>
             <Scene
-              navigationBarStyle={styles.navWhite}
-              key='viewUser' 
-              title=''
-              component={ViewUser}
-              navBarButtonColor='white'
-              backButtonTintColor='white'
-              backButtonTextStyle={styles.backButtonTextStyle}
-              titleStyle={styles.titleStyle}
-              renderBackButton={this.backButton}
-              />  
+            key='selectCategories'
+            title=''
+            component={SelectCategories}
+            hideNavBar/>
+          <Scene 
+            title=''
+            key='login'
+            component={Login}
+            navigationBarStyle={styles.nav}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            backTitle='CANCEL'
+            />
+          <Scene 
+            navigationBarStyle={styles.nav}
+            key='signupEmail' 
+            title=''
+            component={Email}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            />
+          <Scene
+            navigationBarStyle={styles.nav}
+            key='signupPassword' 
+            title=''
+            component={Password}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            />
+          <Scene 
+            navigationBarStyle={styles.nav}
+            key='signupPasswordConfirm' 
+            title=''
+            component={PasswordConfirm}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            />
+          <Scene
+            navigationBarStyle={styles.nav}
+            key='signupBio' 
+            title=''
+            component={Bio}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            />
+          <Scene
+            navigationBarStyle={styles.nav}
+            key='signupProfilePicture' 
+            title=''
+            component={ProfilePicture}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={this.loginBackButton}
+            />
+          <Scene
+            navigationBarStyle={styles.navWhite}
+            key='viewUser' 
+            title=''
+            component={ViewUser}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={() => this.backButton('Discover')} />
+          <Scene
+            navigationBarStyle={styles.navWhite}
+            key='chatThread' 
+            title=''
+            component={ChatThread}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={() => this.backButton('Chat')} />
+          <Scene
+            navigationBarStyle={styles.navWhite}
+            key='connections' 
+            title=''
+            component={Connections}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={() => this.backButton('Discover')} />
         </Stack>
       </Router>
     );
@@ -246,4 +304,19 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 0,
   },
+  tabBar: {
+    backgroundColor: 'white',
+    height: 80,
+    paddingTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 });
+
+// <Scene
+//             key='home'
+//             title=''
+//             component={Home}
+//             hideNavBar/>
+
+

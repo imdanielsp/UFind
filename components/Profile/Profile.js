@@ -18,7 +18,8 @@ export default class Profile extends Component {
       profile_image: 'http://via.placeholder.com/160x160', 
       bio: '' 
     },
-    fadeAnim: new Animated.Value(0)
+    fadeAnim: new Animated.Value(0),
+    id: null
   }
 
   componentDidMount() {
@@ -41,6 +42,7 @@ export default class Profile extends Component {
           this.setState({ 
             isLoading: false,
             user: res.data,
+            id
           })
         })
         
@@ -55,27 +57,14 @@ export default class Profile extends Component {
     try {
       await AsyncStorage.removeItem('@token')
       Actions.push('welcome')
-      this.props.onLogout()
     }
     catch(e) {
       console.log(e)
     }
   }
 
-  handleRoute = route => {
-    switch(route) {
-      case 'listings':
-        return <Listings />
-      case 'favorites':
-        return <Listings data={this.queryFavorites()} />
-      case 'completed':
-        return <Listings data={this.queryCompleted()} />
-      case 'settings':
-        return <Settings />
-      case 'createListing':
-        Actions.push('createListing')
-    }
-  }
+  handleRoute = route => () => Actions.push(route, { id: this.state.id })
+  
   render() {
     let containerAnimation = {
       opacity: this.state.fadeAnim,
@@ -97,24 +86,22 @@ export default class Profile extends Component {
     return (
       <Animated.View style={[styles.container, containerAnimation]}>
         <View>
-          <View style={styles.profileContainer}>
-            <View style={styles.profileBubble}>
-              <Image source={{ uri: this.state.user.profile_image }} style={styles.profilePic}/>  
-              <Text style={styles.profileBubbleText}> 
-                {`${first_name} ${last_name}`}
-              </Text>
+          <View>
+            <View style={styles.userInfo}>
+              <Image source={{ uri: profile_image }} style={styles.profilePic}/>
+              <Text style={styles.userName}>{first_name} {last_name}</Text>
             </View>
             <View style={styles.bioContainer}>
-              <Text style={styles.bioHeader}>Bio</Text>
-              <Text style={styles.bioText}>{bio}</Text>
+              <Text style={styles.smallHeader}>Bio</Text>
+              <Text style={styles.smallText}>{bio}</Text>
             </View>
           </View>
           <View style={styles.profileOptionContainer}>
-            <TouchableOpacity style={styles.profileOption} onPress={() => this.handleRoute('connections')}>
+            <TouchableOpacity style={styles.profileOption} onPress={this.handleRoute('connections')}>
               <Text style={styles.profileOptionText}>Your Connections</Text>
               <Icons name='ios-checkmark-circle-outline' style={styles.fontAwesome}/>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.profileOption} onPress={() => this.handleRoute('settings')}>
+            <TouchableOpacity style={styles.profileOption} onPress={this.handleRoute('settings')}>
               <Text style={styles.profileOptionText}>Settings</Text>
               <Icons name='ios-hammer-outline' style={styles.fontAwesome}/>
             </TouchableOpacity>
@@ -133,6 +120,7 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({ 
   container: {
     backgroundColor: 'white',
+    flex: 1,
     justifyContent: 'space-between',
     height: '88%',
     paddingHorizontal: 20,    
@@ -141,58 +129,41 @@ const styles = StyleSheet.create({
     height: '90%',
     justifyContent: 'center',
   },
-  profileContainer: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  profileBubble: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  profileBubbleText: {
-    letterSpacing: 2,
-    color: 'black',
-    fontFamily: 'circular',
-    fontSize: 20,
-    paddingLeft: 5
-  },
-  profileTextBubbleContainer: {
-    width: 70,
-    height: 70,
-    borderRadius: 50,
-    backgroundColor: PRIMARY_COLOR, 
-    justifyContent: 'center',
-    alignItems: 'center' ,
-    
-  },
-  profileTextBubble: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 30,
-  },
-  fullName: {
-    fontSize: 25,
-    fontWeight: '700',
-  },
   profilePic: {
-    height: 70,
-    width: 70,
-    borderRadius: 35
+    height: 120,
+    width: 120,
+    borderRadius: 60,
+    borderWidth: 1,
+    borderColor: '#ccc'
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 40,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderColor: '#ccc'
+  },
+  userName: {
+    fontFamily: 'circular',
+    fontSize: 38,
+    color: 'black',
+    paddingLeft: 20,
+    color: 'black',
+    width: 250
   },
   bioContainer: {
-    justifyContent: 'center',
-    width: '45%',
+    paddingVertical: 25,
   },
-  bioHeader: {
+  smallHeader: {
     fontFamily: 'circular',
-    fontSize: 18,
+    fontSize: 24,
     color: 'black'
   },
-  bioText: {
+  smallText: {
     fontFamily: 'circular',
-    fontSize: 16,
-    color: '#888'
+    color: '#888',
+    fontSize: 16
   },
   logoutButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -202,6 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 10
   },
   logoutText: {
     color: 'white',
