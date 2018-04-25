@@ -18,7 +18,8 @@ export default class Profile extends Component {
       profile_image: 'http://via.placeholder.com/160x160', 
       bio: '' 
     },
-    fadeAnim: new Animated.Value(0)
+    fadeAnim: new Animated.Value(0),
+    id: null
   }
 
   componentDidMount() {
@@ -41,6 +42,7 @@ export default class Profile extends Component {
           this.setState({ 
             isLoading: false,
             user: res.data,
+            id
           })
         })
         
@@ -61,20 +63,8 @@ export default class Profile extends Component {
     }
   }
 
-  handleRoute = route => {
-    switch(route) {
-      case 'listings':
-        return <Listings />
-      case 'favorites':
-        return <Listings data={this.queryFavorites()} />
-      case 'completed':
-        return <Listings data={this.queryCompleted()} />
-      case 'settings':
-        return <Settings />
-      case 'createListing':
-        Actions.push('createListing')
-    }
-  }
+  handleRoute = route => () => Actions.push(route, { id: this.state.id })
+  
   render() {
     let containerAnimation = {
       opacity: this.state.fadeAnim,
@@ -103,15 +93,15 @@ export default class Profile extends Component {
             </View>
             <View style={styles.bioContainer}>
               <Text style={styles.smallHeader}>Bio</Text>
-              <Text style={styles.smallText}>{bio} {bio}</Text>
+              <Text style={styles.smallText}>{bio}</Text>
             </View>
           </View>
           <View style={styles.profileOptionContainer}>
-            <TouchableOpacity style={styles.profileOption} onPress={() => this.handleRoute('connections')}>
+            <TouchableOpacity style={styles.profileOption} onPress={this.handleRoute('connections')}>
               <Text style={styles.profileOptionText}>Your Connections</Text>
               <Icons name='ios-checkmark-circle-outline' style={styles.fontAwesome}/>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.profileOption} onPress={() => this.handleRoute('settings')}>
+            <TouchableOpacity style={styles.profileOption} onPress={this.handleRoute('settings')}>
               <Text style={styles.profileOptionText}>Settings</Text>
               <Icons name='ios-hammer-outline' style={styles.fontAwesome}/>
             </TouchableOpacity>

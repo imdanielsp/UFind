@@ -21,6 +21,7 @@ import Discover from './components/Discover/Discover'
 import Chat from './components/Chat/Chat'
   import ChatThread from './components/Chat/ChatThread'
 import Profile from './components/Profile/Profile'
+  import Connections from './components/Profile/Connections'
 
 // Signup Flow
 import Email from './components/Signup/Email'
@@ -57,6 +58,7 @@ export default class App extends Component<Props> {
   }
 
   async componentDidMount() {
+    window.navigator.userAgent = 'ReactNative';
     try {
       const token = await AsyncStorage.getItem('@token')
       if(!token) { 
@@ -79,7 +81,7 @@ export default class App extends Component<Props> {
   }
 
   backButton = title => {
-    const onPress = title === 'Discover' ? () => Actions.push('discover') : () => Actions.pop()
+    const onPress = title === 'Chat' ? () => Actions.push('chat') : () => Actions.pop()
     return (
       <TouchableOpacity 
         style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
@@ -93,10 +95,11 @@ export default class App extends Component<Props> {
             marginBottom: 0
           }}/>
         <Text style={{fontFamily: 'circular', fontSize: 18, paddingLeft: 15, paddingBottom: 3}}>
-          {title === 'Discover' ? `Back to ${title}` : 'Back'}
+          Back
         </Text>
       </TouchableOpacity>
     )
+    // {title === 'Discover' ? `Back to ${title}` : 'Back'}
   }
 
   render() {
@@ -114,7 +117,7 @@ export default class App extends Component<Props> {
         <Stack key='root'
           transitionConfig={
             () => ({ screenInterpolator: CardStackStyleInterpolator.forHorizontal }) }>
-          <Scene key='main' tabBarStyle={styles.tabBar} tabs>
+          <Scene key='main' tabBarStyle={styles.tabBar} tabBarPosition='bottom' tabs>
             <Scene
               key='discover'
               title='Discover'
@@ -124,7 +127,7 @@ export default class App extends Component<Props> {
               hideNavBar
               icon={TabIcon}
               component={Discover}
-              />
+              initial/>
             <Scene
               key='chat'
               title='Chat'
@@ -132,7 +135,7 @@ export default class App extends Component<Props> {
               iconName='ios-chatbubbles'
               hideNavBar
               icon={TabIcon}
-              component={Chat} initial/>
+              component={Chat} />
             <Scene
               key='profile'
               title='Profile'
@@ -239,6 +242,16 @@ export default class App extends Component<Props> {
             backButtonTextStyle={styles.backButtonTextStyle}
             titleStyle={styles.titleStyle}
             renderBackButton={() => this.backButton('Chat')} />
+          <Scene
+            navigationBarStyle={styles.navWhite}
+            key='connections' 
+            title=''
+            component={Connections}
+            navBarButtonColor='white'
+            backButtonTintColor='white'
+            backButtonTextStyle={styles.backButtonTextStyle}
+            titleStyle={styles.titleStyle}
+            renderBackButton={() => this.backButton('Discover')} />
         </Stack>
       </Router>
     );
@@ -293,7 +306,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     backgroundColor: 'white',
-    height: 70,
+    height: 80,
     paddingTop: 20,
     justifyContent: 'center',
     alignItems: 'center'

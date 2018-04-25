@@ -7,56 +7,104 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Icons from 'react-native-vector-icons/Ionicons'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
+import { GiftedChat } from 'react-native-gifted-chat'
+
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
-import { ENDPOINT } from '../../constants/api'
+import { ENDPOINT, SOCKET } from '../../constants/api'
 
 type Props = {}
 export default class ChatThread extends Component<Props> {
   state = {
-    currentUser: {}
+    currentUser: {},
+    messages: [],
+    conversation_id: null,
+    otherUser: this.props.navigation.state.params.user_b,
+    otherUserObject: {}
   }
   async componentDidMount() {
     const token = await AsyncStorage.getItem('@token')
     try {
       if(token) { 
-        this.setState({ currentUser: jwt_decode(token) })
+        this.setState({ currentUser: jwt_decode(token).identity })
+        const { id:user_a } = this.state.currentUser
+        const { user_b } = this.props.navigation.state.params
+        axios.post(`${ENDPOINT}/conversation`, { user_a, user_b })
+        .then(res => {
+          const { id:conversation_id } = res.data.conversation
+          const otherUserObject = (res.data.conversation.user_a.id === this.state.otherUser) ? res.data.conversation.user_a : res.data.conversation.user_b
+          const messages = this.parseMessages(res.data.messages)
+          this.setState({ conversation_id, messages, otherUserObject }) //messages: res.data.messages
+          SOCKET.emit('join', { conversation_id } )
+          SOCKET.on('json', message => {
+            if(message.sender.id === this.state.otherUser) {
+              const newMessage = [{ 
+                text: message.msg,
+                _id: this.state.messages.length + 2,
+                user: {
+                  _id: message.sender.id
+                }
+              }]
+              this.setState(previousState => ({
+                messages: GiftedChat.append(previousState.messages, newMessage),
+              }))
+            }
+          })
+        })
+        .catch(e => console.log(e))
       }
     } catch(e) {
       console.log(e)
     }
   }
 
-  _renderItem = ({ item, index }) => { 
-    const id = 10 //current user
-    const msgStyle = item.sender_id === id ? styles.sent : styles.received
-    const textStyle = item.sender_id === id ? styles.sentMsg : styles.receivedMsg
-    return (
-      <View style={msgStyle}>
-        <Text style={textStyle}>{item.msg}</Text>
-      </View>
-    )
+  parseMessages = messages => {
+    return messages.map((message, key) => {
+      return { 
+        text: message.content,
+        _id: key,
+        user: {
+          _id: message.sender.id,
+        }
+      }
+    })
   }
-  
-  _keyExtractor = (item, index) => item.msg 
+
+  _keyExtractor = (item, index) => item.text 
+
+  onSend(messages = []) {
+    const { conversation_id } = this.state, { id:sender_id } = this.state.currentUser
+    const msg = messages.find(f => f).text
+    SOCKET.emit('text', { msg, conversation_id, sender_id })
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }))
+  }
+
+  _onPress = () => {
+    const { currentUser:viewer, otherUser:user } = this.state
+    console.log(user,viewer)
+    Actions.push('viewUser', { user, viewer, backTo: 'pop'  })
+  }
 
   render() {
-    const first_name = 'Serey', last_name = 'Morm', profile_image = 'https://avatars0.githubusercontent.com/u/24735049?s=460&v=4'
+    const { profile_image, first_name, last_name } = this.state.otherUserObject
 
     return ( 
       <View style={styles.container}>
         <View style={styles.recipientContainer}>
-          <Image style={styles.recipientPic} source={{ uri: profile_image }} />
+          <TouchableOpacity onPress={this._onPress}>
+            <Image style={styles.recipientPic} source={{ uri: profile_image }} />
+          </TouchableOpacity>
           <Text style={styles.recipientName}>{first_name} {last_name}</Text>
         </View>
-        <View style={styles.flatListContainer}>
-          <FlatList
-            data={messages}
-            renderItem={this._renderItem} 
-            keyExtractor={this._keyExtractor}
-            extraData={this.state} />
-        </View>
+          <GiftedChat
+            messages={this.state.messages} 
+            onSend={messages => this.onSend(messages)}
+            user={{_id: this.state.currentUser.id}}
+            renderAvatar={null}
+            renderTime={() => null}/>
       </View>
     )
   }
@@ -85,8 +133,7 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 25
   },
-  flatListContainer: {
-    height: '75%',
+  messageContainer: {
     width: '100%'
   },
   sent: {
@@ -115,39 +162,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   }
 })
-
-const messages = [
-  { 
-    msg: '1 A test mess sag daf1',
-    sender_id: 10
-  },
-  { 
-    msg: '2 A test messsage sdaf dfad 2',
-    sender_id: 10
-  },
-  { 
-    msg: '3 A test messsage dfadsfdfdsf3',
-    sender_id: 20
-  },
-  { 
-    msg: '4 A test messsage dsfadsf dfadf dafd 4',
-    sender_id: 10
-  },
-  { 
-    msg: '1 A test mess sag daf 5',
-    sender_id: 20
-  },
-  { 
-    msg: '2 A test messsage sdaf dfad 6',
-    sender_id: 10
-  },
-  { 
-    msg: '3 A test messsage dfadsfdfdsf7',
-    sender_id: 20
-  },
-  { 
-    msg: '4 A test messsage dsfadsf dfadf dafd 8',
-    sender_id: 10
-  },
-
-]
