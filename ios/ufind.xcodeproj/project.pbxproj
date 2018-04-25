@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00499B8CE4FA4E9CBA40DCCA /* Circular Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7DA91253E37E43218282AAFC /* Circular Black.ttf */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -63,6 +62,7 @@
 		B67A527381D240FBA348A0DA /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A538B4E03A74ECF997A572A /* Ionicons.ttf */; };
 		C35806489F8B4EA6A774FAFA /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7082BFCC4A470F9098BBFC /* Lottie.framework */; };
 		E234B5EE14A9445B9B20B09E /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FD5349BD16D4C5DB26F4251 /* FontAwesome.ttf */; };
+		F6BA720433904D29866AA612 /* circular-black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 764B5ADDE75542B085CE7D73 /* circular-black.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +482,7 @@
 		D8977004D9F54D9F81860FB7 /* libRNSpinkit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSpinkit.a; sourceTree = "<group>"; };
 		F7427221CF64436B96B3E448 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/@expo/vector-icons/vendor/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		FA55A77C20C64A80A34FBE7E /* Lottie.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Lottie.xcodeproj; path = "../node_modules/lottie-ios/Lottie.xcodeproj"; sourceTree = "<group>"; };
+		764B5ADDE75542B085CE7D73 /* circular-black.ttf */ = {isa = PBXFileReference; name = "circular-black.ttf"; path = "../assets/fonts/circular-black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -746,6 +747,7 @@
 				7DA91253E37E43218282AAFC /* Circular Black.ttf */,
 				34FB2B85860C4983815F5928 /* circular-book.ttf */,
 				A361257879DE4626AF1D9D3A /* lineto-circular-pro-book.ttf */,
+				764B5ADDE75542B085CE7D73 /* circular-black.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1387,6 +1389,7 @@
 				00499B8CE4FA4E9CBA40DCCA /* Circular Black.ttf in Resources */,
 				48551707C4D2465C8CB2A6AB /* circular-book.ttf in Resources */,
 				A97545EF44E44EC4AE0A3A4B /* lineto-circular-pro-book.ttf in Resources */,
+				F6BA720433904D29866AA612 /* circular-black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

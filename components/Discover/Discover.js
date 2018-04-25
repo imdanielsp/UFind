@@ -20,6 +20,7 @@ import Icons from 'react-native-vector-icons/Ionicons'
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
 import lottieFile from '../../lottie/skeleton.json'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { ENDPOINT } from '../../constants/api'
 import { PRIMARY_COLOR } from '../../constants/colors';
@@ -144,7 +145,7 @@ export default class Profile extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: '7%',
+    paddingTop: ifIphoneX('12%', '7%'),
     paddingHorizontal: '3%',
     backgroundColor: 'white'
   },
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 40,
     color: 'black',
     paddingBottom: 15
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     color: '#999'
   },
   flatListContainer: {
-    height: '82%',
+    height: ifIphoneX('87%', '82%'),
   },
   profilePic: {
     height: 100,
@@ -189,9 +190,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userName: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 24,
-    color: 'black'
+    color: '#444'
   },
   userInterests: {
     flexDirection: 'column',

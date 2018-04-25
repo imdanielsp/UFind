@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc'
   },
   userName: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 38,
     color: 'black',
     paddingLeft: 20,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   connectButtonText: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: 'white',
     fontSize: 20,
     paddingHorizontal: 15,

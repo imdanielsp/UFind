@@ -11,10 +11,10 @@ import {
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
 import Icons from 'react-native-vector-icons/Ionicons'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import Welcome from './components/Welcome'
 import Login from './components/Login'
-import Home from './components/Home'
 
 // Tabs
 import Discover from './components/Discover/Discover'

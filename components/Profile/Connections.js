@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '4%'
   },
   title: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 30
   }, 
   loadingContainer: {

@@ -6,6 +6,7 @@ import { Text, View, TextInput, StyleSheet, Button, Image,
 import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-image-crop-picker'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 import axios from 'axios'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
@@ -95,11 +96,13 @@ export default class Bio extends Component<Props> {
             <View style={{alignItems: 'center'}}>
               {profile_image === null
                 ? (
-                  <Image 
-                    style={styles.imagePreview}
-                    onPress={this._pickImage}
-                    source={{ uri: 'https://s3.amazonaws.com/ufind-statics/profile_image.png'}} 
-                  />
+                  <TouchableOpacity onPress={this._pickImage}>
+                    <Image 
+                      style={styles.imagePreview}
+                      onPress={this._pickImage}
+                      source={{ uri: 'https://s3.amazonaws.com/ufind-statics/profile_image.png'}} 
+                    />
+                  </TouchableOpacity>
                 )
                 : <Image style={styles.imagePreview} source={{uri: profile_image }} />
               }
@@ -147,9 +150,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 40,
     textAlign: 'left',
-    fontWeight: "200",
     marginBottom: 20,
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   text_small: {
     color: 'white',
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: 'black',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: PRIMARY_COLOR
   },
   twoButtonContainer: {

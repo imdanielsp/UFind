@@ -5,6 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import Icons from 'react-native-vector-icons/Ionicons'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { ENDPOINT } from '../../constants/api'
@@ -123,7 +124,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     height: '88%',
-    paddingHorizontal: 20,    
+    paddingHorizontal: 20,  
+    paddingTop: ifIphoneX('3%', '0%')
   },
   loadingContainer : {
     height: '90%',
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc'
   },
   userName: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 38,
     color: 'black',
     paddingLeft: 20,
@@ -156,14 +158,14 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
   },
   smallHeader: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 24,
     color: 'black'
   },
   smallText: {
     fontFamily: 'circular',
     color: '#888',
-    fontSize: 16
+    fontSize: 18
   },
   logoutButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
     fontSize: 22,
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     textAlign: 'center',
     paddingHorizontal: 15,
     paddingBottom: 3
@@ -199,9 +201,8 @@ const styles = StyleSheet.create({
   },
   profileOptionText: {
     fontSize: 20,
-    fontWeight: '300',
-    color: '#888',
-    fontFamily: 'circular'
+    color: '#555',
+    fontFamily: 'circular-black',
   },
   fontAwesome: {
     fontSize: 26,

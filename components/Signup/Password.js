@@ -4,6 +4,7 @@ import { Text, View, TextInput, StyleSheet, Button, Platform,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
@@ -60,7 +61,7 @@ export default class Password extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 70) : 0} 
             behavior='padding'>
             <View>
               <Text style={styles.text}>Hello {first_name} —</Text>
@@ -103,9 +104,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 40,
     textAlign: 'left',
-    fontWeight: "200",
     marginBottom: 20,
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   text_small: {
     color: 'white',

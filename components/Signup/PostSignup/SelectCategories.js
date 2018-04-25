@@ -11,6 +11,7 @@ import lottieLoading from '../../../lottie/loading.json'
 import Icons from 'react-native-vector-icons/Ionicons'
 import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../../../constants/colors'
 import { ENDPOINT } from '../../../constants/api'
@@ -182,6 +183,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: '4%',
+    paddingTop: ifIphoneX('10%', '6%'),
     justifyContent: 'space-between',
   },
   content: {
@@ -213,18 +215,41 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   optionText: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 30,
     color: 'black'
   },
   header: {
     fontSize: 40,
     color: 'black',
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   smallText: {
     fontSize: 20,
     color: '#888',
     marginTop: 10
   },
+  fab: {
+    flexDirection: 'row',
+    backgroundColor: PRIMARY_COLOR,
+    width: '100%',
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 1,
+  },
+  fabText: {
+    fontFamily: 'circular-black',
+    color: 'white',
+    fontSize: 20
+  },
+  fabIcon: {
+    marginTop: 5,
+    paddingHorizontal: 10
+  }
 })

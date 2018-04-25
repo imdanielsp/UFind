@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity,
-  AsyncStorage, Animated, ActivityIndicator, Alert, StatusBar } from 'react-native'
+import { Text, View, TextInput, StyleSheet, Button, TouchableOpacity, KeyboardAvoidingView,
+  AsyncStorage, Animated, ActivityIndicator, Alert, StatusBar, Platform } from 'react-native'
 import axios from 'axios'
 // import jwt_decode from 'jwt-decode'
 import { Actions } from 'react-native-router-flux'
@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 // import Signup from './Signup'
 // import Home from './Home'
 import Spinner from 'react-native-spinkit'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../constants/styles'
@@ -95,46 +96,52 @@ export default class Login extends Component<Props> {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor={PRIMARY_COLOR} barStyle="light-content" />
-          <Animated.View style={[styles.content, containerAnimation]}>
+        <Animated.View style={[styles.content, containerAnimation]}>
+          <KeyboardAvoidingView 
+            style={{flex: 1, justifyContent: 'space-between'}} 
+            behavior='padding'
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 30} >
+          <View style={styles.allInputContainer}>
             <Text style={styles.title}>Login</Text>
-            <View style={styles.allInputContainer}>
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Your E-mail</Text>
-                <TextInput
-                  placeholder='University E-Mail'
-                  underlineColorAndroid='rgba(0,0,0,0)'
-                  onChangeText={(email) => this.setState({email})}
-                  autoCapitalize='none'
-                  style={styles.textInput}
-                  spellCheck={false}
-                  autoCorrect={false}/>
-              </View>
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                  placeholder='Your Password'
-                  underlineColorAndroid='rgba(0,0,0,0)'
-                  onChangeText={(password) => this.setState({password})}
-                  style={styles.textInput}
-                  autoCapitalize='none'
-                  secureTextEntry/>
-              </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Your E-mail</Text>
+              <TextInput
+                placeholder='University E-Mail'
+                underlineColorAndroid='rgba(0,0,0,0)'
+                onChangeText={(email) => this.setState({email})}
+                autoCapitalize='none'
+                style={styles.textInput}
+                spellCheck={false}
+                autoCorrect={false}/>
             </View>
-            <View style={styles.buttonContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder='Your Password'
+                underlineColorAndroid='rgba(0,0,0,0)'
+                onChangeText={(password) => this.setState({password})}
+                style={styles.textInput}
+                autoCapitalize='none'
+                onSubmitEditing={this.onSubmit}
+                secureTextEntry/>
+            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={isLoading ? null : this.onSubmit}>
+            {isLoading 
+              ? <ActivityIndicator size='small' color={PRIMARY_COLOR} /> 
+              : <Text style={styles.buttonText}>Login</Text>
+            }
+          </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={isLoading ? null : this.onSubmit}>
-              {isLoading 
-                ? <ActivityIndicator size='small' color={PRIMARY_COLOR} /> 
-                : <Text style={styles.buttonText}>Login</Text>
-              }
+              onPress={this._goToSignup}>
+              <Text style={styles.buttonText}>Not a member?</Text>
             </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this._goToSignup}>
-                <Text style={styles.buttonText}>Not a member?</Text>
-              </TouchableOpacity>
-            </View>
+          </View>
+          </KeyboardAvoidingView>
         </Animated.View>
       </View>
     )
@@ -144,9 +151,8 @@ export default class Login extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     backgroundColor: PRIMARY_COLOR,
-    paddingHorizontal: '3%',
+    paddingHorizontal: ifIphoneX('6%', '3%'),
   },
   loadingContainer: {
     height: '100%',
@@ -157,9 +163,10 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'left',
     color: 'white',
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   content: {
+    flex: 1,
     justifyContent: 'space-between',
   },
   allInputContainer: {
@@ -178,12 +185,12 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     backgroundColor: 'rgba(255,255,255, 0.8)',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     borderWidth: 0,
   },
   label: {
     color: 'white',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 18,
     textAlign: 'left',
     paddingVertical: '5%'
@@ -206,7 +213,7 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     fontSize: 20,
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: PRIMARY_COLOR,
   },
 })

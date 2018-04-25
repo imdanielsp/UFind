@@ -4,6 +4,7 @@ import { Text, View, TextInput, StyleSheet, Button, Platform,
           ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 // import { KeyboardAvoidingView } from 'react-native-keyboard-aware-scroll-view'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
@@ -65,10 +66,10 @@ export default class Bio extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 64) : 0} 
             behavior='padding'>
             <View>
-              <Text style={styles.text}>Let's update your bio</Text>
+              <Text style={styles.text}>Let's update your bio —</Text>
               <Text style={styles.text_small}>Tell us something about yourself — this will be displayed on your profile</Text>
               <TextInput 
                 style={styles.input}
@@ -108,9 +109,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 40,
     textAlign: 'left',
-    fontWeight: "200",
     marginBottom: 20,
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   text_small: {
     color: 'white',
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
     color: 'white',
     margin: 'auto',
     backgroundColor: 'rgba(255,255,255,0.25)',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
+    fontFamily: 'circular-black'
   },
   invalid: {
     color: 'red',
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: 'black',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: PRIMARY_COLOR
   }
 })

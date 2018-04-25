@@ -22,6 +22,7 @@ import { ENDPOINT } from '../../constants/api'
 import LottieView from 'lottie-react-native'
 import lottieCrying from '../../lottie/crying.json'
 import lottieLoading from '../../lottie/loading.json'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 export default class Profile extends Component {
 
@@ -131,10 +132,10 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: '7%',
+    paddingTop: ifIphoneX('12%', '7%'),
     backgroundColor: 'white',
     height: '100%',
-    paddingHorizontal: '2%',
+    paddingHorizontal: '4%',
   },
   loadingContainer: {
     flex: 1,
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     fontSize: 40,
     color: 'black'
   },
@@ -182,7 +183,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
   userName: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
+    color: '#333',
     fontSize: 20
   },
   preview: {

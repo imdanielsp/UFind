@@ -12,6 +12,7 @@ import {
 import { Actions } from 'react-native-router-flux'
 import LottieView from 'lottie-react-native'
 import lottieFile from '../lottie/map_animation.json'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { PRIMARY_COLOR } from '../constants/colors'
 
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: '8%',
+    paddingTop: ifIphoneX('12%','8%'),
     paddingHorizontal: '3%',
     backgroundColor: PRIMARY_COLOR,
   },
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'left',
     color: 'white',
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   titleIntro: {
     fontSize: 20,
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: PRIMARY_COLOR,
     fontSize: 24,
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   instructions: {
     textAlign: 'center',

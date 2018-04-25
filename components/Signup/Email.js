@@ -8,6 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 import { ENDPOINT } from '../../constants/api'
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 import { isEmail } from 'lodash-checkit'
 
@@ -80,7 +81,7 @@ export default class Email extends Component<Props> {
         <Animated.View style={[styles.content, containerAnimation]}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 70 : 0} 
+            keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 70) : 0} 
             behavior='padding'>
             <View>
               <Text style={styles.text}>Hello —</Text>
@@ -128,15 +129,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 40,
     textAlign: 'left',
-    fontWeight: "200",
     marginBottom: 20,
-    fontFamily: 'circular'
+    fontFamily: 'circular-black'
   },
   text_small: {
     color: 'white',
     fontSize: 20,
     textAlign: 'left',
-    fontWeight: "200",
     marginBottom: 20,
     fontFamily: 'circular'
   },
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
     color: 'white',
     margin: 'auto',
     backgroundColor: 'rgba(255,255,255,0.25)',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     padding: 14
   },
   invalid: {
