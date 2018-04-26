@@ -95,28 +95,14 @@ export default class Profile extends Component {
 
   render() {
     const { users, loading } = this.state
-    // if(loading) {
-    //   return (
-    //     <View style={styles.loadingContainer}>
-    //       <View style={{height: '100%', width: '100%', marginTop: '20%'}}>
-    //         <LottieView source={lottieFile} 
-    //           loop 
-    //           ref={animation => {
-    //             if (animation) animation.play()
-    //           }}/>
-    //       </View>
-    //     </View>
-    //   )
-    // }
-    // <LottieView source={lottieFile} 
-    // loop 
-    // ref={animation => {
-    //   if (animation) animation.play()
-    // }}/>
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Discover</Text>
-        <Text style={styles.titleSmall}>We've generated a list of users who share the same interest at you. Browse through and interact with them!</Text>
+        <View style={styles.blurContainer}>
+          <Text style={styles.titleSmall}>
+            We've generated a list of users who share the same interest as you. Browse through and interact with them!
+          </Text>
+        </View>
         <View style={styles.flatListContainer}>
           {
             loading
@@ -132,7 +118,8 @@ export default class Profile extends Component {
               keyExtractor={this._keyExtractor}
               extraData={this.state}
               refreshing={this.state.loading}
-              onRefresh={this.fetchDiscover}/>
+              onRefresh={this.fetchDiscover}
+              showsVerticalScrollIndicator={false}/>
             )
           }
 
@@ -162,9 +149,18 @@ const styles = StyleSheet.create({
     paddingBottom: 15
   },
   titleSmall: {
-    fontWeight: '300',
+    fontFamily: 'circular',
     fontSize: 18,
-    color: '#999'
+    color: '#999',
+    backgroundColor: 'white'
+  },
+  blurContainer: {
+    width: '120%',
+    shadowColor: 'white',
+    shadowOffset: { width: 0, height: 15 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    zIndex: 2,
   },
   flatListContainer: {
     height: ifIphoneX('87%', '82%'),
@@ -199,6 +195,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   commonInterest: {
-    width: 220
+    width: 220,
+    fontFamily: 'circular',
   }
 })

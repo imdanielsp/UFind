@@ -8,7 +8,8 @@ import Icons from 'react-native-vector-icons/Ionicons'
 import jwt_decode from 'jwt-decode'
 import axios from 'axios'
 import { GiftedChat } from 'react-native-gifted-chat'
-
+import lottieLoading from '../../lottie/loading.json'
+import LottieView from 'lottie-react-native'
 
 import { PRIMARY_COLOR } from '../../constants/colors'
 import { HEADER_TITLE as titleStyle } from '../../constants/styles'
@@ -21,7 +22,8 @@ export default class ChatThread extends Component<Props> {
     messages: [],
     conversation_id: null,
     otherUser: this.props.navigation.state.params.user_b,
-    otherUserObject: {}
+    otherUserObject: {},
+    loading: true
   }
   async componentDidMount() {
     const token = await AsyncStorage.getItem('@token')
@@ -35,7 +37,7 @@ export default class ChatThread extends Component<Props> {
           const { id:conversation_id } = res.data.conversation
           const otherUserObject = (res.data.conversation.user_a.id === this.state.otherUser) ? res.data.conversation.user_a : res.data.conversation.user_b
           const messages = this.parseMessages(res.data.messages)
-          this.setState({ conversation_id, messages, otherUserObject }) //messages: res.data.messages
+          this.setState({ conversation_id, messages, otherUserObject, loading: false })
           SOCKET.emit('join', { conversation_id } )
           SOCKET.on('json', message => {
             if(message.sender.id === this.state.otherUser) {
@@ -57,6 +59,10 @@ export default class ChatThread extends Component<Props> {
     } catch(e) {
       console.log(e)
     }
+  }
+
+  componentWillUnmount() {
+    SOCKET.removeAllListeners()
   }
 
   parseMessages = messages => {
@@ -83,14 +89,26 @@ export default class ChatThread extends Component<Props> {
   }
 
   _onPress = () => {
-    const { currentUser:viewer, otherUser:user } = this.state
-    console.log(user,viewer)
+    const { currentUser:viewer, otherUserObject:user } = this.state
     Actions.push('viewUser', { user, viewer, backTo: 'pop'  })
   }
 
   render() {
+    const { loading } = this.state
     const { profile_image, first_name, last_name } = this.state.otherUserObject
 
+    if(loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <View style={styles.loadingContent}>
+            <LottieView source={lottieLoading}             
+              ref={animation => {
+                if (animation) animation.play()
+              }}/>
+          </View>
+        </View>
+      )
+    }
     return ( 
       <View style={styles.container}>
         <View style={styles.recipientContainer}>
@@ -115,6 +133,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
     paddingHorizontal: '2%',
+  },
+  loadingContainer: {
+    flex: 1,
+  },
+  loadingContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   recipientContainer: {
     justifyContent: 'center',

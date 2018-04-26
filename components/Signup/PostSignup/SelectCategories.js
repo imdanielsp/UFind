@@ -59,11 +59,12 @@ export default class SelectCategories extends Component {
   }
 
   _renderItem = ({ item, index }) => { 
+    const { selected } = item
     return (
       <TouchableOpacity style={styles.option} onPress={this._onSelect(index)}>
-        <Text key={item.id} style={styles.optionText}>{item.name}</Text>
+        <Text key={item.id} style={selected ? styles.optionSelected : styles.optionText }>{item.name}</Text>
         <View style={styles.lottieContainer}>
-          <Check selected={item.selected} />
+          <Check selected={selected} />
         </View>
       </TouchableOpacity>
     )
@@ -94,14 +95,13 @@ export default class SelectCategories extends Component {
     categories.forEach(item => {
       if(item.selected) selectedIds.push(item.id)
     })
-    
     try {
       const token = await AsyncStorage.getItem('@token')
       if(token) {
         const { email } = jwt_decode(token).identity
            this.setState({ done: true })
         axios.post(`${ENDPOINT}/category/subscribe`, { email, categories: selectedIds})
-        .then(res => setTimeout(() => Actions.push('discover'), 1500))
+        .then(res => setTimeout(() => Actions.push('discover'), 1800))
         .catch(e => console.log(e))
       } else {
         Actions.push('welcome')
@@ -170,7 +170,7 @@ export default class SelectCategories extends Component {
           </View>
         </View>
         <TouchableOpacity onPress={this._onSubmit} style={styles.fab}>
-          <Text style={styles.fabText}>Save preference</Text>
+          <Text style={styles.fabText}>Save Categories</Text>
           <Icons name="ios-checkmark-circle" color='white' size={24} style={styles.fabIcon}/>
         </TouchableOpacity>
       </View>
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     width: 110,
   },
   flatListContainer: {
-    height: '75%',
+    height: ifIphoneX('74%', '72%'),
   },
   option: {
     flex: 1,
@@ -217,6 +217,11 @@ const styles = StyleSheet.create({
   optionText: {
     fontFamily: 'circular-black',
     fontSize: 30,
+    color: '#888'
+  },
+  optionSelected: {
+    fontFamily: 'circular-black',
+    fontSize: 30,
     color: 'black'
   },
   header: {
@@ -225,9 +230,10 @@ const styles = StyleSheet.create({
     fontFamily: 'circular-black'
   },
   smallText: {
-    fontSize: 20,
+    fontSize: ifIphoneX(22, 20),
     color: '#888',
-    marginTop: 10
+    marginTop: 8,
+    fontFamily: 'circular'
   },
   fab: {
     flexDirection: 'row',

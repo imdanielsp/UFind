@@ -78,19 +78,22 @@ export default class Connections extends Component {
     const hasConnections = users.length > 0
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{hasConnections ? 'Your Connections' : 'Connections —'}</Text>
         {hasConnections
           ? (
-            <FlatList
-            data={users}
-            renderItem={this._renderItem} 
-            keyExtractor={this._keyExtractor}
-            extraData={this.state}
-            refreshing={this.state.loading}
-            onRefresh={this.fetchDiscover}/>
+            <View>
+              <Text style={styles.title}>Your Connections</Text>
+              <FlatList
+                data={users}
+                renderItem={this._renderItem} 
+                keyExtractor={this._keyExtractor}
+                extraData={this.state}
+                refreshing={this.state.loading}
+                onRefresh={this.fetchDiscover}/>
+            </View>
           )
           : (
             <View>
+              <Text style={styles.title}>Your Connections</Text>
               <Text style={styles.noConnectionText}>Looks like you haven't made any connections yet. Once you do, they'll appear on this list, and you can start a conversation with them from here.</Text>
               <View style={{height: '60%', width: '100%', marginTop: '4%'}}>
                 <LottieView source={lottieCrying} 
@@ -115,7 +118,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-    paddingHorizontal: '4%'
+    paddingHorizontal: '4%',
+    justifyContent: 'space-between'
   },
   title: {
     fontFamily: 'circular-black',
@@ -131,9 +135,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   noConnectionText: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#888',
-    paddingTop: '5%'
+    paddingTop: '5%',
+    fontFamily: 'circular'
   },
   flatListContainer: {
     height: '82%',
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   fabText: {
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: 'white',
     fontSize: 20
   },

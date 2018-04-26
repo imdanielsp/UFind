@@ -22,11 +22,8 @@ export default class Bio extends Component<Props> {
 
   componentDidMount() {
     const { user_a, user_b } = this.state
-    console.log('###')
-    console.log(user_a, user_b)
     axios.post(`${ENDPOINT}/connection/verify`, { user_a, user_b })
     .then(res => {
-      console.log(res)
       if(res.request.status === 200) this.setState({ connected: true })
     })
     .catch(err => console.log(err))
@@ -44,11 +41,13 @@ export default class Bio extends Component<Props> {
   }
 
   pushToChat = () => {
-    Actions.push('chatThread', { user_b: this.props.navigation.state.params.user.id })
+    Actions.replace('chatThread', { user_b: this.props.navigation.state.params.user.id })
   }
 
   render() {
-    const { first_name, last_name, bio, email, id, profile_image } = this.props.navigation.state.params.user
+    const { first_name, last_name, bio, email,
+      id, profile_image, subscriptions} = this.props.navigation.state.params.user
+    const implodedSubscriptions = subscriptions.map(item => item.name).join(', ')
     const { connected, loading } = this.state
     const renderMsgBtn = this.props.navigation.state.params.backTo === 'connections'
     return (
@@ -64,7 +63,7 @@ export default class Bio extends Component<Props> {
           </View>
           <View style={styles.interestContainer}>
             <Text style={styles.smallHeader}>{first_name}'s Interests</Text>
-            <Text style={styles.smallText}>Music, Film, Architecture, this is just filler stuff - udpate later</Text>
+            <Text style={styles.smallText}>{implodedSubscriptions}</Text>
           </View>
         </View>
         {renderMsgBtn

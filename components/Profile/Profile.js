@@ -148,11 +148,11 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontFamily: 'circular-black',
-    fontSize: 38,
+    fontSize: 34,
     color: 'black',
-    paddingLeft: 20,
+    paddingLeft: 15,
     color: 'black',
-    width: 250
+    width: 240
   },
   bioContainer: {
     paddingVertical: 25,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   smallHeader: {
     fontFamily: 'circular-black',
     fontSize: 24,
-    color: 'black'
+    color: '#444'
   },
   smallText: {
     fontFamily: 'circular',

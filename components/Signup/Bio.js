@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, Platform,
-          TouchableOpacity, AsyncStorage, Animated, Alert,
+          TouchableOpacity, AsyncStorage, Alert,
           ActivityIndicator, KeyboardAvoidingView, Easing, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 // import { KeyboardAvoidingView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,22 +12,11 @@ import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 type Props = {}
 export default class Bio extends Component<Props> {
   state = { 
-    bio: '',
-    fadeAnim: new Animated.Value(0),
-    slideOut: new Animated.Value(0),
-    slideIn: new Animated.Value(1000),
+    bio: ''
   }
 
   componentDidMount() {
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 250,
-      }
-    ).start(done => {
-      this.input.focus()
-    })
+    setTimeout(() => this.input.focus(), 550)
   }
 
   _onSubmit = () => {
@@ -51,19 +40,9 @@ export default class Bio extends Component<Props> {
   }
 
   render() {
-    let containerAnimation = {
-      opacity: this.state.fadeAnim,
-      transform: [{
-        translateY: this.state.fadeAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [50, 0]
-        })
-      }, { translateY: this.state.slideOut}]
-    }
-
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.content, containerAnimation]}>
+        <View style={styles.content}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
             keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 64) : 0} 
@@ -89,7 +68,7 @@ export default class Bio extends Component<Props> {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
-        </Animated.View>
+        </View>
       </View>
     )
   }

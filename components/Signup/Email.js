@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, Button, Platform,
-          TouchableOpacity, AsyncStorage, Animated, Alert,
+          TouchableOpacity, AsyncStorage, Alert,
           ActivityIndicator, KeyboardAvoidingView, Keyboard } from 'react-native'
 import axios from 'axios'
 import { Actions } from 'react-native-router-flux'
@@ -17,21 +17,10 @@ export default class Email extends Component<Props> {
   state = { 
     email: '',
     isLoading: false,
-    fadeAnim: new Animated.Value(0),
-    slideOut: new Animated.Value(0),
-    slideIn: new Animated.Value(1000),
   }
 
   componentDidMount() {
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 250,
-      }
-    ).start(done => {
-      this.input.focus()
-    })
+    setTimeout(() => this.input.focus(), 550)
   }
 
   _onSubmit = () => {
@@ -66,19 +55,10 @@ export default class Email extends Component<Props> {
   }
 
   render() {
-    let containerAnimation = {
-      opacity: this.state.fadeAnim,
-      transform: [{
-        translateY: this.state.fadeAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [20, 0]
-        })
-      }, { translateY: this.state.slideOut}]
-    }
     const { isLoading } = this.state
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.content, containerAnimation]}>
+        <View style={styles.content}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
             keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 70) : 0} 
@@ -109,7 +89,7 @@ export default class Email extends Component<Props> {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
-        </Animated.View>
+        </View>
       </View>
     )
   }
@@ -174,7 +154,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: 'black',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: PRIMARY_COLOR
   }
 })

@@ -12,22 +12,11 @@ import { HEADER_TITLE as titleStyle } from '../../constants/styles'
 type Props = {}
 export default class PasswordConfirm extends Component<Props> {
   state = { 
-    password: '',
-    fadeAnim: new Animated.Value(0),
-    slideOut: new Animated.Value(0),
-    slideIn: new Animated.Value(1000),
+    password: ''
   }
 
   componentDidMount() {
-    Animated.timing(
-      this.state.fadeAnim,
-      {
-        toValue: 1,
-        duration: 250,
-      }
-    ).start(done => {
-      this.input.focus()
-    })
+   setTimeout(() => this.input.focus(), 550)
   }
 
   _onSubmit = () => {
@@ -47,18 +36,9 @@ export default class PasswordConfirm extends Component<Props> {
   }
 
   render() {
-    let containerAnimation = {
-      opacity: this.state.fadeAnim,
-      transform: [{
-        translateY: this.state.fadeAnim.interpolate({
-          inputRange: [0, 1],
-          outputRange: [50, 0]
-        })
-      }, { translateY: this.state.slideOut}]
-    }
     return (
       <View style={styles.container}>
-        <Animated.View style={[styles.content, containerAnimation]}>
+        <View style={styles.content}>
           <KeyboardAvoidingView 
             style={styles.keyboardAvoid} 
             keyboardVerticalOffset={Platform.OS === 'ios' ? ifIphoneX(100, 70) : 0} 
@@ -84,7 +64,7 @@ export default class PasswordConfirm extends Component<Props> {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
-        </Animated.View>
+        </View>
       </View>
     )
   }
@@ -149,7 +129,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: 'black',
-    fontFamily: 'circular',
+    fontFamily: 'circular-black',
     color: PRIMARY_COLOR
   }
 })

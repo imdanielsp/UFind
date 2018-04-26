@@ -54,19 +54,19 @@ type Props = {};
 export default class App extends Component<Props> {
   state = {
     authenticated: false,
-    isLoading: false,
+    loading: true,
   }
 
   async componentDidMount() {
-    window.navigator.userAgent = 'ReactNative';
+    window.navigator.userAgent = 'ReactNative'
+    let authenticated = false
     try {
       const token = await AsyncStorage.getItem('@token')
-      if(!token) { 
-        Actions.push('welcome')
-      }
+      if(token) authenticated = true
     } catch (e) {
       console.log(e)
     }
+    this.setState({ loading: false, authenticated })
   }
   
 
@@ -81,7 +81,7 @@ export default class App extends Component<Props> {
   }
 
   backButton = title => {
-    const onPress = title === 'Chat' ? () => Actions.push('chat') : () => Actions.pop()
+    const onPress = title === 'Chat' ? () => Actions.pop() : () => Actions.pop()
     return (
       <TouchableOpacity 
         style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}
@@ -103,8 +103,8 @@ export default class App extends Component<Props> {
   }
 
   render() {
-    const { authenticated } = this.state
-    if(this.state.isLoading) {
+    const { authenticated, loading } = this.state
+    if(loading) {
       return (
         <View style={styles.loadingContainer}>
           <ActivityIndicator color='white' size='large' />
@@ -127,7 +127,7 @@ export default class App extends Component<Props> {
               hideNavBar
               icon={TabIcon}
               component={Discover}
-              initial/>
+              initial={authenticated}/>
             <Scene
               key='chat'
               title='Chat'
@@ -149,8 +149,9 @@ export default class App extends Component<Props> {
             key='welcome'
             title=''
             component={Welcome}
-            hideNavBar/>
-            <Scene
+            hideNavBar
+            initial={!authenticated}/>
+          <Scene
             key='selectCategories'
             title=''
             component={SelectCategories}
