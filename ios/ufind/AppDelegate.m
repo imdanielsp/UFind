@@ -18,8 +18,12 @@
 {
   NSURL *jsCodeLocation;
 
-  jsCodeLocation = jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-
+// uncomment this for production
+//  jsCodeLocation = jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  
+// uncomment this for debugging
+  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"ufind"
                                                initialProperties:nil
