@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   smallText: {
-    fontWeight: '300',
+    fontFamily: 'circular',
     paddingTop: 5,
     color: '#888',
-    fontSize: 16
+    fontSize: 18
   },
   interestContainer: {
     paddingBottom: 20

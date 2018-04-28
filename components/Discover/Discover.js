@@ -155,9 +155,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   blurContainer: {
-    width: '120%',
     shadowColor: 'white',
-    shadowOffset: { width: 0, height: 15 },
+    shadowOffset: { width: -15, height: 15 },
     shadowOpacity: 1,
     shadowRadius: 4,
     zIndex: 2,
