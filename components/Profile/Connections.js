@@ -102,7 +102,7 @@ export default class Connections extends Component {
                     if (animation) animation.play()
                   }}/>
               </View>
-              <TouchableOpacity onPress={() => Actions.push('discover')} style={styles.fab}>
+              <TouchableOpacity onPress={() => Actions.reset('main')} style={styles.fab}>
                 <Text style={styles.fabText}>Find Connections</Text>
                 <Icons name="ios-people" color='white' size={34} style={styles.fabIcon}/>
               </TouchableOpacity>

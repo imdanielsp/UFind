@@ -46,7 +46,7 @@ export default class Bio extends Component<Props> {
       const { access_token } = res.data
       try {
         await AsyncStorage.setItem('@token', JSON.stringify(res.data.access_token))
-        Actions.push('selectCategories')
+        Actions.reset('selectCategories')
       } catch (e) {
         Alert.alert('Token Error', 'Somethig went wrong while setting up your account..')
         this.setState({ isLoading: false })
