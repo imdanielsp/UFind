@@ -101,7 +101,7 @@ export default class SelectCategories extends Component {
         const { email } = jwt_decode(token).identity
            this.setState({ done: true })
         axios.post(`${ENDPOINT}/category/subscribe`, { email, categories: selectedIds})
-        .then(res => setTimeout(() => Actions.push('discover'), 1800))
+        .then(res => setTimeout(() => Actions.reset('main'), 1800))
         .catch(e => console.log(e))
       } else {
         Actions.push('welcome')

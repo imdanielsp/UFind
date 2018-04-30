@@ -52,7 +52,8 @@ export default class App extends Component<Props> {
         </View>
         {
           this.state.animate && (
-            <View style={{position: 'absolute', height: '120%', width: '100%'}}>
+            <View style={{position: 'absolute', height: Platform.select({
+              ios: '120%', android: '122%'}), width: '100%'}}>
               <LottieView source={lottieFile}       
                 loop      
                 ref={animation => {
